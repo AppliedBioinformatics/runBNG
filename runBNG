@@ -1,0 +1,927 @@
+#!/bin/bash -l
+
+################################################################################
+# This script aims to complete all IrysView key functions using command line.  #
+# ScriptName: runBNG.sh                                                        #
+# Written by Andy Yuan (yuxuan.yuan@research.uwa.edu.au)                       #
+# Last modified date: 26/10/2016                                               #
+# Note:                                                                        #
+#       1)Please download the latest BNG tools and scripts into your system    #
+#               Tools: http://www.bnxinstall.com/RefalignerAssemble            #
+#               Scripts: http://www.bnxinstall.com/Scripts                     #
+#       2)This script needs python (v2.7.x), R (v3.x) and perl (v5.10.x,       #
+#       v5.14.x or v5.16.x). If your want to use it, please set python, R and  #
+#       perl properly in your system.                                          #
+################################################################################
+
+###============================================= messages ===================================================
+##Start message
+message="\nDescription: This pipeline aims to complete all BioNano IrysView key functions using command line.\n";
+message="$message	\nVersion: 1.0\n";
+message="$message	\nUsage: `basename $0` [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]\n";
+message="$message	fa2cmap		convert a given fasta format file into a cmap file.\n";
+message="$message	mol_qty		get a molecule quality report for the BioNano data.\n"
+message="$message	repeatCheck	check repeats using BioNano raw data.\n";
+message="$message	denovo		de novo assemble BioNao single molecule.\n";
+message="$message	compare		compare two different cmap files.\n";
+message="$message	hybrid		perform BioNano hybrid scaffolding.\n";
+message="$message	SV		structural variation detection.\n";
+message="$message	\nPlease select one of the given options and continue\n";
+
+##Digest fasta file into cmap file
+dig_msg_d="\nDescription: Digest a given fasta format file into a cmap file using particluar enzyme.";
+dig_msg="\nUsage: `basename $0` fa2cmap [-h] [-f <fasta_file>] [-o <outDir>] [-e <enzyme_name>] [-s <enzyme_sequence>]
+	[-z <minSeqLen>] [-l <minEnzy>] [-S <scriptsDir>]\n";
+dig_msg="$dig_msg	-h	display this help and exit.\n";
+dig_msg="$dig_msg	-f	a fasta format file to be digested.\n";
+dig_msg="$dig_msg	-o	output directory.\n";
+dig_msg="$dig_msg	-e	name of selected enzyme. Currently available enzymes are: BspQI, BbvCI, BsmI, BsrDI and bseCI.\n";
+dig_msg="$dig_msg	-s	sequence of the enzyme when -e is not given.\n";
+dig_msg="$dig_msg	-z	filter criteria: min molecule length. Default 20 (Kb).\n";
+dig_msg="$dig_msg	-l	filter criteria: min number of selected enzymes in the molecule. Default is 5.\n";
+dig_msg="$dig_msg	-S	the path of BioNano scripts folder.\n";
+
+##mol_qty options
+mr_msg_d="\nDescription: Report the quality of given BioNano single molecules.";
+mr_msg="\nUsage: `basename $0` mol_qty [-h] [-b <bnx>] [-r <ref_cmap>] [-R <RefAligner>] [-t <maxthreads>] [-m <maxRAM>] [-s<minLen>]
+	[-n <minSNR>] [-o <outDir>] [-p <name>]\n";
+mr_msg="$mr_msg	-h	display this help and exit.\n";
+mr_msg="$mr_msg	-b	the raw BionNano file (Molecules.bnx).\n";
+mr_msg="$mr_msg	-r	the digested reference (.cmap).You may check with/without it. With a reference more information will be given and you may
+		use these information to adjust your denovo assembly parameter settings.\n";
+mr_msg="$mr_msg	-R	BioNano RefAligner.\n";
+mr_msg="$mr_msg	-t	maximum threads or cups.\n";
+mr_msg="$mr_msg	-m	maximum memory (Gb).\n";
+mr_msg="$mr_msg	-s	minimun single molecule to filter. Default is 100 (Kb).\n";
+mr_msg="$mr_msg	-n	minimun SNR to use. Default is 3.\n";
+mr_msg="$mr_msg	-o	the full path of output directory.\n";
+mr_msg="$mr_msg	-p	A preferred name for the output files.\n";
+
+##Repeat check
+rc_msg_d="\nDescription: Check repeats using BioNano raw data."
+rc_msg="\nUsage: `basename $0` repeatCheck [-h] [-b <bnx>] [-o <outDir>] [-p <name>] [-R <RefAligner>]\n";
+rc_msg="$rc_msg	-h	display this help and exit.\n";
+rc_msg="$rc_msg	-b	the raw BionNano file (Molecules.bnx).\n";
+rc_msg="$rc_msg	-o	the full path of output directory.\n";
+rc_msg="$rc_msg	-p	A preferred name for the output files.\n";
+rc_msg="$rc_msg	-R	BioNano RefAligner.\n";
+
+##Denovo options
+deno_msg_d="\nDescription: De novo assembly for BioNano single molecules.";
+deno_msg="\nUsage: `basename $0` denovo [-h] [-t <toolsDir>] [-s <scriptsDir>] [-b <bnx>] [-T <nthreads>] [-j <njobs>]
+	[-i <iter>] [-z <genome_size>] [-r <ref_cmap>] [-p <FP>] [-n <FN>] [-d <sd>] [-f <sf>] [-R <sr>] [ -L<lm>] [ -S <sm>] [-o <outDir>]\n";
+deno_msg="$deno_msg	-h	display this help and exit \n";
+deno_msg="$deno_msg	-t	the full path of BiNano tools folder \n";
+deno_msg="$deno_msg	-s	the full path of BioNano scripts folder \n";
+deno_msg="$deno_msg	-b	the raw BionNano file (Molecules.bnx) \n";
+deno_msg="$deno_msg	-T	number of threads or CPUs \n";
+deno_msg="$deno_msg	-j	number of jobs to run \n";
+deno_msg="$deno_msg	-i 	times of iteration. Default is 5 \n";
+deno_msg="$deno_msg	-z	the genome size of input species (Mb) \n";
+deno_msg="$deno_msg	-r	the digested reference (.cmap). Default is None \n";
+deno_msg="$deno_msg	-p	flase positive density (/100Kb). Default is 1.5 \n";
+deno_msg="$deno_msg	-n	false negative rate (%/100). Default is 0.15 \n";
+deno_msg="$deno_msg	-d	scalingSD (Kb^1/2). Default is 0.0 \n";
+deno_msg="$deno_msg	-f	siteSD (Kb). Default is 0.2 \n";
+deno_msg="$deno_msg	-R	relativeSD. Default is 0.03 \n"
+deno_msg="$deno_msg	-L	large jobs maximum memory (GB). Default is 128 \n";
+deno_msg="$deno_msg	-S	small jobs maximum memory (GB). Default is 7.5 \n";
+deno_msg="$deno_msg	-o	the path of output directory \n";
+
+##Compare assembled BioNano data to a ref cmap file
+comp_msg_d="\nDescription: Compare a query BioNano cmap file to a ref cmap file";
+comp_msg="\nUsage: `basename $0` compare [-h] [-R <RefAligner>] [-r <ref_cmap>] [-q <qry_cmap>] [-o <outDir>]
+	[-p <output_name>] [-t <maxthreads>] [-m <maxmemory>]\n";
+comp_msg="$comp_msg	-h	display this help and exit.\n";
+comp_msg="$comp_msg	-R	BioNano RefAligner.\n";
+comp_msg="$comp_msg	-r	the reference cmap file.\n"
+comp_msg="$comp_msg	-q	the query cmap file.\n";
+comp_msg="$comp_msg	-o	the full path of output.\n";
+comp_msg="$comp_msg	-p	A preferred name for the output files.\n";
+comp_msg="$comp_msg	-t	maximum threads.\n";
+comp_msg="$comp_msg	-m	maximum memory.\n";
+
+##SV detection
+sv_msg_d="\nDescription: Compare cmaps from different individules to detect structural variation."
+sv_msg="\nUsage: `basename $0` SV [-h] [-r <ref_cmap>] [-f <final_assembledDir>] [-s <scriptsDir>] [-t <toolsDir>]
+	[-z <genome_size>] [-o <outDir>]\n";
+sv_msg="$sv_msg	-h	display this help and exit.\n";
+sv_msg="$sv_msg	-r	the reference cmap file.\n";
+sv_msg="$sv_msg	-f	the full path of final assembled folder, such as *exp_refineFinal1.\n";
+sv_msg="$sv_msg	-s	the full path of BioNano scripts folder.\n";
+sv_msg="$sv_msg	-t	the full path of BioNano tools folder.\n";
+sv_msg="$sv_msg	-z	the genome size of input species (Mb).\n";
+sv_msg="$sv_msg	-T	maximum threads or CPUs.\n";
+sv_msg="$sv_msg	-o	the full path of output directory.\n";
+
+##Hybrid pipeline
+hy_msg_d="\nDescription: This pipeline helps to run BNG hybrid assembly pipeline."
+hy_msg="\nUsage: `basename $0` hybrid [-h] [-s <scriptsDir>] [-t <toolsDir>] [-r <reference>] [-b <bnx>] [-m <minLen>] [-l <minEnzy>]
+	[-e <enzyme> ] [-B <conflict_filter_level>] [-N <conflict_filter_level>] [-z <genome_size>] [-f <final_assembled_cmap>]
+	[-c <intial_p>] [-u <chimeric_p>] [-g <merge_p>] [-d <distance>] [-p <percentage>] [-o <outDir>] [-T <maxthreads>] [-M <maxmemory>]\n";
+hy_msg="$hy_msg	-h	display this help and exit.\n";
+hy_msg="$hy_msg	-s	the full path of BioNano scripts folder.\n";
+hy_msg="$hy_msg	-t	the full path of BioNano tools folder.\n";
+hy_msg="$hy_msg	-r	NGS sequence file.\n";
+hy_msg="$hy_msg	-b	the raw BionNano file (Molecules.bnx).\n";
+hy_msg="$hy_msg	-m	filter: min molecule length (Kb). Default is 20.\n"
+hy_msg="$hy_msg	-l	filter:	min number of selected enzyme in molecule. Default is 5.\n";
+hy_msg="$hy_msg	-e	name of selected enzyme. Currently available enzymes are: BspQI, BbvCI, BsmI, BsrDI and bseCI. Default is BspQI.\n"
+hy_msg="$hy_msg	-B	BioNano conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig.\n"
+hy_msg="$hy_msg	-N	NGS conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig.\n"
+hy_msg="$hy_msg	-z	the genome size of input species (Mb).\n"
+hy_msg="$hy_msg	-f	final assembled cmap file. For instance exp_refineFinal1_contigs.cmap.\n";
+hy_msg="$hy_msg	-c	Minimum confidence value to output intial alignments. Recommended starting value of 1e-5/genome size in Mb. Default is 1e-10.\n"
+hy_msg="$hy_msg	-u	Minimum confidence value used to flag chimeric/conflicting alignments. Default is 1e-13.\n"
+hy_msg="$hy_msg	-g	Minimum confidence value used to merge alignments. Recommand to set it to be the same as the -u. Default is 1e-13\n"
+hy_msg="$hy_msg	-d	The distance (kb) from a conflicting site within which the chimeric quality score of BioNano genome map labels will be examined.
+		Default is 10.\n"
+hy_msg="$hy_msg	-p	The minimal percentage (%) of molecules spanning to the left and right of a label of interest, thus supporting the BioNano assembly
+		at that region. default is 35.\n"
+hy_msg="$hy_msg	-o	output directory.\n";
+hy_msg="$hy_msg	-T	maximum threads or CPUs.\n";
+hy_msg="$hy_msg	-M	maximum RAMs (Gb).\n";
+
+###=========================================================== Programs ==================================================================
+##Print help if no agrs input
+if [[ $# -eq 0 ]];then
+	echo -e "$message";
+	exit 0;
+fi
+
+##Check the first arg
+if [[ $1 != "fa2cmap" ]] && [[ $1 != "denovo" ]] && [[ $1 != "mol_qty" ]] && [[ $1 != "repeatCheck" ]] && [[ $1 != "compare" ]] && [[ $1 != "hybrid" ]] && [[ $1 != "SV" ]];
+then
+	echo -e "$message";
+	exit 0;
+fi
+
+##======================= Select "fa2cmap" flag =======================
+##Print help if only select "fa2cmap"
+if [[ $1 == "fa2cmap" ]] && [[ $# -eq 1 ]]; then
+	echo -e "$dig_msg_d";
+	echo -e "$dig_msg";
+	exit 0;
+fi
+
+if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
+	arg1=$1
+	shift
+	dig_options=':hf:o:e:s:z:l:S:';
+	while getopts "$dig_options" opt; do
+		case "$opt" in
+			h) echo -e "$dig_msg_d"; echo -e "$dig_msg"; exit 0;;
+			f) fa=${OPTARG};;
+			o) outDir=${OPTARG};;
+			e) enz_n=${OPTARG};;
+			s) enz_s=${OPTARG};;
+			z) minLen=${OPTARG};;
+			l) minEnzy=${OPTARG};;
+			S) scriptsDir=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+	if [[ -z "$fa" ]] || [[ -z "$outDir" ]] || [[ -z "$scriptsDir" ]];then
+		echo
+		echo 'Some compulsory option is not given please check as following:'
+		echo -e "$dig_msg" 1>&2;exit 1;
+	fi
+	if [[ -z "$enz_n" ]] && [[ -z "$enz_s" ]]; then
+		echo
+		echo "Please select one enzyme";
+		exit 1;
+	fi
+	if [[ -n "$enz_n" ]] && [[ -n "$enz_s" ]];then
+		echo
+		echo "Please select either enzyme name or enzyme sequence. Do not use both."
+		exit 1;
+	fi
+
+	fa=`readlink -f "$fa"`;
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ ${outDir: -2} == ".." ]];then
+		outDir="$PWD/$outDir"
+	fi
+
+	last_chr_s="${scriptsDir: -1}"
+
+	if [[ "$last_chr_s" == "/" ]]; then
+		scriptsDir="${scriptsDir%?}"
+	fi
+
+	if [[ "$scriptsDir" == "." ]];then
+		scriptsDir="$PWD"
+
+	elif [[ "${scriptsDir: -2}" == ".." ]];then
+		scriptsDir="$PWD/$scriptsDir"
+	fi
+
+	if [[ -z "$minLen" ]]; then
+		minLen=20
+	fi
+	if [[ -z "$minEnzy" ]];then
+		minEnzy=5
+	fi
+
+	echo "========================================== fa2cmap starts ============================================="
+	echo "## Start date: `date`"
+	echo "## The fasta format file is: $fa"
+	echo "## The output directory is: $outDir/fa2cmap"
+	echo "## The selected enzyme name is: $enz_n"
+	echo "## The selected enzyme sequence is: $enz_s"
+	echo "## The min molecule length (Kb) want to filter is: $minLen"
+	echo "## The min number of enzyme in a molecule is: $minEnzy"
+	echo "## The directory of BiNano scripts folder is: $scriptsDir"
+	if [[ -z "$enz_n" ]] && [[ -n "$enz_s" ]]; then
+		perl $scriptsDir/HybridScaffold/scripts/fa2cmap.pl -i "$fa" -o "$outDir" -s "$enz_s" -m "$minEnzy" -M "$minLen"
+	fi
+	if [[ -n "$enz_n" ]] && [[ -z "$enz_s" ]]; then
+		perl $scriptsDir/HybridScaffold/scripts/fa2cmap.pl -i $fa -o $outDir -n $enz_n -m $minEnzy -M $minLen
+	fi
+	echo "## End date: `date`"
+	echo "======================================================================================================="
+
+fi
+
+##======================= Select "mol_qty" flag =======================
+##Print help if only select mol_qty
+if [[ $1 == "mol_qty" ]] && [[ $# -eq 1 ]];then
+	echo -e "$mr_msg_d";
+	echo -e "$mr_msg";
+	exit 0;
+fi
+##Select "mol_qty" flag
+if [[ $1 == "mol_qty" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	mr_options=':hb:r:R:t:m:s:n:o:p:'
+	while getopts "$mr_options" opt; do
+		case "$opt" in
+			h) echo -e "$mr_msg_d"; echo -e "$mr_msg"; exit 0;;
+			b) bnx=${OPTARG};;
+			r) ref=${OPTARG};;
+			R) RefA=${OPTARG};;
+			t) maxthreads=${OPTARG};;
+			m) maxmem=${OPTARG};;
+			s) minlen=${OPTARG};;
+			n) minSNR=${OPTARG};;
+			o) outDir=${OPTARG};;
+			p) name=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+
+	if [[ -z "$bnx" ]] || [[ -z "$RefA" ]] || [[ -z "$maxthreads" ]] || [[ -z "$maxmem" ]] || [[ -z "$outDir" ]] || [[ -z $name ]];
+	then
+		echo
+		echo 'Some compulsory option is not given please check as following:'
+		echo -e "$mr_msg" 1>&2;exit 1;
+	fi
+	if [[ -z "$minlen" ]];then
+		minlen=100;
+	fi
+	if [[ -z "$minSNR" ]];then
+		minSNR=3;
+	fi
+	if [[ -s "$bnx" ]];then
+		bnx=`readlink -f "$bnx"`
+	else
+		echo "Please check your input bnx file"
+		exit 1;
+	fi
+	if [[ -e "$RefA" ]] && [[ -x "$RefA" ]];then
+		RefA=`readlink -f "$RefA"`
+	else
+		echo "Please check you RefAligner whether is exited or executable"
+		exit 1;
+	fi
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+		outDir_full="$outDir$name"
+	fi
+	outDir_full="$outDir/$name"
+
+
+	echo "====================================== Checking the molecule quality ======================================="
+	echo "## Start date: `date`"
+	echo "## The bnx file is: $bnx"
+	echo "## The RefAligner is: $RefA"
+	echo "## The maximum threads are: $maxthreads"
+	echo "## The maximum memory (Gb) are: $maxmem"
+	echo "## The minimun filtered single molecule length (Kb) is: $minlen"
+	echo "## The minimun SNR is: $minSNR"
+	echo "## The output file names are: ${outDir_full}*"
+	echo
+	if [[ -z "$ref" ]]; then
+		"$RefA" -f -i "$bnx" -o "$outDir_full" -nosplit 2 -BestRef 1 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.0 -A 5 -outlier 1e-3 -outlierMax 40 -endoutlier 1e-4 -S -1000 -sr 0.03 -se 0.2 -MaxSF 0.25 -MaxSE 0.5 -resbias 4 64 -maxmem "$maxmem" -M 3 3 -minlen "$minlen" -T 1e-11 -maxthreads "$maxthreads" -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 3 -hash -hashdelta 10 -hashoffset 1 -hashmaxmem "$maxmem" -minSNR "$minSNR" -insertThreads 4 -maptype 0 -PVres 2 -PVendoutlier -AlignRes 2.0 -rres 0.9 -resEstimate -ScanScaling 2 -RepeatMask 5 0.01 -RepeatRec 0.7 0.6 1.4 -maxEnd 50 -usecolor 1 -stdout -stderr -randomize 1 -subset 1 5000 >&1
+		rm ${outDir_full}*bin
+		echo
+		grep ^'Read' "${outDir_full}".stdout | cut -d':' -f2
+		echo
+	else
+		"$RefA" -f -ref "$ref" -i $bnx -o "$outDir_full" -nosplit 2 -BestRef 1 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.0 -A 5 -outlier 1e-3 -outlierMax 40 -endoutlier 1e-4 -S -1000 -sr 0.03 -se 0.2 -MaxSF 0.25 -MaxSE 0.5 -resbias 4 64 -maxmem "$maxmem" -M 3 3 -minlen "$minlen" -T 1e-11 -maxthreads "$maxthreads" -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 3 -hash -hashdelta 10 -hashoffset 1 -hashmaxmem "$maxmem" -minSNR "$minSNR" -insertThreads 4 -maptype 0 -PVres 2 -PVendoutlier -AlignRes 2.0 -rres 0.9 -resEstimate -ScanScaling 2 -RepeatMask 5 0.01 -RepeatRec 0.7 0.6 1.4 -maxEnd 50 -usecolor 1 -stdout -stderr -randomize 1 -subset 1 5000 >&1
+
+		FP=`grep 'FP' "${outDir_full}.stdout" | tail -1 | cut -d">" -f2 | cut -d"," -f1`
+		FN=`grep 'FN' "${outDir_full}.stdout" | tail -1 | cut -d">" -f2 | cut -d" " -f2`
+		sd=`grep '\<sd\>' "${outDir_full}.stdout" | tail -1 |cut -d":" -f2 | cut -d"," -f2  | cut -d">" -f2 | cut -d" " -f2`
+		sf=`grep '\<sf\>' "${outDir_full}.stdout" | tail -1 |cut -d":" -f2 | cut -d" " -f6`
+		sr=`grep '\<sr\>' "${outDir_full}.stdout" | tail -1 |cut -d":" -f2 | cut -d"," -f3 | cut -d" " -f6`
+		echo
+		grep ^'Read' "${outDir_full}".stdout | cut -d':' -f2
+		echo
+		echo "False Positive Density (/100Kb) [FP]: `printf "%.2f" $FP`"
+		echo "False Negative Rate (%/100) [FN]:     `printf "%.2f" $FN`"
+		echo "ScalingSD (Kb^1/2) [sd]:              `printf "%.2f" $sd`"
+		echo "SiteSD (Kb) [sf]:                     `printf "%.2f" $sf`"
+		echo "RelativeSD [sr]:                      `printf "%.2f" $sr`"
+	fi
+
+	echo "## End date: `date`"
+	echo "==========================================================================================================="
+fi
+
+##======================= Select "repeatCheck" flag =======================
+##Print help if only select repeatCheck
+if [[ $1 == "repeatCheck" ]] && [[ $# -eq 1 ]];then
+	echo -e "$rc_msg_d"
+	echo -e "$rc_msg";
+	exit 0;
+fi
+##Select "repeatCheck" flag
+if [[ $1 == "repeatCheck" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	rc_options=':hb:o:p:R:';
+	while getopts "$rc_options" opt; do
+		case "$opt" in
+			h) echo -e "$rc_msg_d";echo -e "$rc_msg"; exit 0;;
+			b) bnx=${OPTARG};;
+			o) outDir=${OPTARG};;
+			p) name=${OPTARG};;
+			R) RefA=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+	if [[ -z "$bnx" ]] || [[ -z "$outDir" ]] || [[ -z "$name" ]] || [[ -z "$RefA" ]];then
+		echo
+		echo 'Some compulsory option is not given please check as following:'
+		echo -e "$rc_msg" 1>&2;exit 1;
+	fi
+
+	bnx=`readlink -f "$bnx"`
+	RefA=`readlink -f "$RefA"`
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+		outDir_full="$outDir$name"
+	fi
+
+	outDir_full="$outDir/$name"
+
+	echo "========================================== repeatCheck starts ============================================="
+	echo "## Start date: `date`"
+	echo "## The bnx file is: $bnx"
+	echo "## The BioNano RefAligner is: $RefA"
+	echo "## The output file names are: ${outDir_full}*"
+	echo
+	"$RefA" -i "$bnx" -f -simpleRepeatTolerance 0.1 -simpleRepeatMinEle 5 -o "$outDir_full" -simpleRepeatStandalone -stdout -stderr >&1
+	echo
+	echo "## End date: `date`"
+	echo "==========================================================================================================="
+fi
+
+##======================= Select "denovo" flag =======================
+##Print help if only select denovo
+if [[ $1 == "denovo" ]] && [[ $# -eq 1 ]];then
+	echo -e "$deno_msg_d"
+	echo -e "$deno_msg";
+	exit 0;
+fi
+##Select "denovo" flag
+if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	deno_options=':ht:s:b:T:j:i:z:r:p:n:d:f:R:L:S:o:';
+	while getopts "$deno_options" opt; do
+		case "$opt" in
+			h) echo -e "$deno_msg_d";echo -e "$deno_msg"; exit 0;;
+			t) toolsDir=${OPTARG};;
+			s) scriptsDir=${OPTARG};;
+			b) bnx=${OPTARG};;
+			T) nthreads=${OPTARG};;
+			j) njobs=${OPTARG};;
+			i) iter=${OPTARG};;
+			z) gs=${OPTARG};;
+			r) ref=${OPTARG};;
+			p) fp=${OPTARG};;
+			n) fn=${OPTARG};;
+			d) sd=${OPTARG};;
+			f) sf=${OPTARG};;
+			R) sr=${OPTARG};;
+			L) lm=${OPTARG};;
+			S) sm=${OPTARG};;
+			o) outDir=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+	if [[ -z "$toolsDir" ]] || [[ -z "$scriptsDir" ]] || [[ -z "$bnx" ]] || [[ -z "$nthreads" ]] || [[ -z "$njobs" ]] || [[ -z "$gs" ]] || [[ -z "$outDir" ]];
+	then
+		echo
+		echo 'Some compulsory option is not given please check as following:'
+		echo -e "$mr_msg" 1>&2;exit 1;
+	fi
+
+	if [[ -z "$iter" ]]; then
+		iter=5
+	fi
+
+	if [[ -z "$fp" ]]; then
+		fp=1.5
+	fi
+
+	if [[ -z "$fn" ]]; then
+		fn=0.15
+	fi
+
+	if [[ -z "$sd" ]]; then
+		sd=0.0
+	fi
+
+	if [[ -z "$sf" ]]; then
+		sf=0.2
+	fi
+
+	if [[ -z "$sr" ]]; then
+		sr=0.03
+	fi
+
+	if [[ -z "$lm" ]]; then
+		lm=128
+	fi
+
+	if [[ -z "$sm" ]]; then
+		sm=7.5
+	fi
+
+
+	last_chr_t="${toolsDir: -1}"
+
+	if [[ "$last_chr_t" == "/" ]]; then
+		toolsDir="${toolsDir%?}"
+	fi
+
+	if [[ "$toolsDir" == "." ]];then
+		toolsDir="$PWD"
+
+	elif [[ "${toolsDir: -2}" == ".." ]];then
+		toolsDir="$PWD/$toolsDir"
+	fi
+
+	last_chr_s="${scriptsDir: -1}"
+
+	if [[ "$last_chr_s" == "/" ]]; then
+		scriptsDir="${scriptsDir%?}"
+	fi
+
+	if [[ "$scriptsDir" == "." ]];then
+		scriptsDir="$PWD"
+
+	elif [[ "${scriptsDir: -2}" == ".." ]];then
+		scriptsDir="$PWD/$scriptsDir"
+	fi
+
+	pv=`awk "BEGIN {print 1.0e-5/$gs}"`
+	pvs=`awk "BEGIN {print $pv/10}"`
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+	fi
+
+	if [[ -s "$bnx" ]];then
+		bnx=`readlink -f "$bnx"`
+	else
+		echo "Please check your input bnx file"
+		exit 1;
+	fi
+
+	if [[ "$gs" -le 100 ]]; then
+		xml="$scriptsDir/optArguments_small.xml"
+		pval=1e-7
+		pvals=1e-8
+
+	elif [[ "$gs" -gt 100 ]] && [[ "$gs" -le 1000 ]]; then
+		xml="$scriptsDir/optArguments_medium.xml"
+		pval=1e-9
+		pvals=1e-10
+	else
+		xml="$scriptsDir/optArguments_human.xml"
+		pval=1e-10
+		pvals=1e-11
+	fi
+
+	echo "========================================== De novo assembly starts ============================================="
+	echo "## Start date: `date`"
+	echo "## The bnx file is: $bnx"
+	echo "## The digested reference is: $ref"
+	echo "## The path of BNG scripts folder is: $scriptsDir"
+	echo "## The path of BNG tools folder is: $toolsDir"
+	echo "## The number of threads is: $nthreads"
+	echo "## The number of jobs is: $njobs"
+	echo "## The number of iterations is: $iter"
+	echo "## False Positive Density (/100Kb) [FP]: $fp"
+	echo "## False Negative Rate (%/100) [FN]: $fn"
+	echo "## ScalingSD (Kb^1/2) [sd]: $sd"
+	echo "## SiteSD (Kb) [sf]: $sf"
+	echo "## RelativeSD [sr]: $sr"
+	echo "## The genome size (Mb) is: $gs"
+	echo "## The output directory is: $outDir"
+	echo
+	cp -f $xml "$outDir/optArguments_new.xml"
+	sed -i -e "s/\"-FP\"\ val0=\"1.5\"/\"-FP\"\ val0=\"$fp\"/" -e "s/\"-FN\"\ val0=\"0.15\"/\"-FN\"\ val0=\"$fn\"/" -e "s/\"-sd\"\ val0=\"0.0\"/\"-sd\"\ val0=\"$sd\"/" -e "s/\"-sr\"\ val0=\"0.03\"/\"-sr\"\ val0=\"$sr\"/" -e "s/\"-sf\"\ val0=\"0.2\"/\"-sf\"\ val0=\"$sf\"/" -e "s/val0=\"128\"/val0=\"$lm\"/" -e "s/val0=\"7.5\"/val0=\"$sm\"/" -e "s/val0=\"$pval\"\ display=\"P\ Value\ Cutoff\ Threshold\"\ tab=\"ASSEMBLE\"\ group=\"Initial\ Assembly\"/val0=\"$pv\"\ display=\"P\ Value\ Cutoff\ Threshold\"\ tab=\"ASSEMBLE\"\ group=\"Initial\ Assembly\"/" -e "s/val0=\"$pvals\"\ display=\"P\ Value\ Cutoff\ Threshold\"\ tab=\"ASSEMBLE\"\ group=\"Extension\ and\ Refinement\"/val0=\"$pvs\"\ display=\"P\ Value\ Cutoff\ Threshold\"\ tab=\"ASSEMBLE\"\ group=\"Extension\ and\ Refinement\"/" "$outDir/optArguments_new.xml"
+
+
+	if [[ -z "$ref" ]];then
+		python "$scriptsDir"/pipelineCL.py -w -d -U -T "$nthreads" -j "$njobs" -i "$iter" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" >&1
+	fi
+	if [[ -s "$ref" ]];then
+		python "$scriptsDir"/pipelineCL.py -w -d -U -T "$nthreads" -j "$njobs" -i "$iter" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" -r "$ref" >&1
+	fi
+	rm "$outDir/optArguments_new.xml"
+	echo
+	echo "## End date: `date`"
+	echo "==============================================================================================================="
+fi
+
+##======================= Select "compare" flag =======================
+##Print help if only select compare
+if [[ $1 == "compare" ]] && [[ $# -eq 1 ]];then
+	echo -e "$comp_msg_d"
+	echo -e "$comp_msg";
+	exit 0;
+fi
+##Select "compare" flag
+if [[ $1 == "compare" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	comp_options=':hR:r:q:o:p:t:m:';
+	while getopts "$comp_options" opt; do
+		case "$opt" in
+			h) echo -e "$comp_msg_d";echo -e "$comp_msg"; exit 0;;
+			R) RefA=${OPTARG};;
+			r) ref=${OPTARG};;
+			q) qry=${OPTARG};;
+			o) outDir=${OPTARG};;
+			p) name=${OPTARG};;
+			t) maxthreads=${OPTARG};;
+			m) maxmem=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+
+	if [[ -z "$RefA" ]] || [[ -z "$ref" ]] || [[ -z "$qry" ]] || [[ -z "$outDir" ]] || [[ -z "$name" ]] || [[ -z "$maxthreads" ]] || [[ -z "$maxmem" ]];
+	then
+		echo
+		echo 'Some compulsory option is not given please check as following:';
+		echo -e "$comp_msg" 1>&2;exit 1;
+	fi
+	RefA=`readlink -f "$RefA"`
+	ref=`readlink -f "$ref"`
+	qry=`readlink -f "$qry"`
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+		outDir_full="$outDir$name"
+	fi
+
+	outDir_full="$outDir/$name"
+
+	echo "========================================== comparison starts ============================================="
+	echo "## Start date: `date`"
+	echo "## The ref cmap file is: $ref"
+	echo "## The qry cmap file is: $qry"
+	echo "## The Binano Refaligner is: $RefA"
+	echo "## The maximum threads is: $maxthreads"
+	echo "## The maximum RAM (Gb) is: $maxmem"
+	echo "## The output file names are: ${outDir_full}*"
+	echo
+	"$RefA" -f -ref "$ref" -i "$qry" -o "$outDir_full" -maxthreads "$maxthreads" -output-veto-filter _intervals.txt$ -res 2.9 -FP 0.6 -FN 0.06 -sf 0.20 -sd 0.0 -sr 0.01 -extend 1 -outlier 0.0001 -endoutlier 0.001 -PVendoutlier -deltaX 12 -deltaY 12 -xmapchim 12 -hashgen 5 7 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -hashMultiMatch 100 -insertThreads 4 -nosplit 2 -biaswt 0 -T 1e-12 -S -1000 -indel -PVres 2 -rres 0.9 -MaxSE 0.5 -HSDrange 1.0 -outlierBC -xmapUnique 12 -AlignRes 2. -outlierExtend 12 24 -Kmax 12 -f -maxmem "$maxmem" -BestRef 1 -stdout -stderr >&1
+	echo
+	echo "## End date: `date`"
+	echo "========================================================================================================="
+fi
+##======================= Select "SV" flag =======================
+##Print help if only select compare
+if [[ $1 == "SV" ]] && [[ $# -eq 1 ]];then
+	echo -e "$sv_msg_d";
+	echo -e "$sv_msg";
+	exit 0;
+fi
+##Select "SV" flag
+if [[ $1 == "SV" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	sv_options=':hr:f:s:t:z:T:o:';
+	while getopts "$sv_options" opt; do
+		case "$opt" in
+			h) echo -e "$sv_msg_d";echo -e "$sv_msg"; exit 0;;
+			r) ref=${OPTARG};;
+			f) final=${OPTARG};;
+			s) scriptsDir=${OPTARG};;
+			t) toolsDir=${OPTARG};;
+			z) gs=${OPTARG};;
+			T) maxthreads=${OPTARG};;
+			o) outDir=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+
+	if [[ -z "$ref" ]] || [[ -z "$final" ]] || [[ -z "$scriptsDir" ]] || [[ -z "$toolsDir" ]] || [[ -z "$gs" ]] || [[ -z "$outDir" ]] || [[ -z "$maxthreads" ]];
+	then
+		echo
+		echo 'Some compulsory option is not given please check as following:';
+		echo -e "$sv_msg" 1>&2;exit 1;
+	fi
+
+	ref=`readlink -f "$ref"`
+
+	last_chr_f="${final: -1}"
+
+	if [[ "$last_chr_f" == "/" ]]; then
+		final="${final%?}"
+	fi
+
+	if [[ "$final" == "." ]];then
+		final="$PWD"
+
+	elif [[ "${final: -2}" == ".." ]];then
+		final="$PWD/$final"
+	fi
+
+	last_chr_t="${toolsDir: -1}"
+
+	if [[ "$last_chr_t" == "/" ]]; then
+		toolsDir="${toolsDir%?}"
+	fi
+
+	if [[ "$toolsDir" == "." ]];then
+		toolsDir="$PWD"
+
+	elif [[ "${toolsDir: -2}" == ".." ]];then
+		toolsDir="$PWD/$toolsDir"
+	fi
+
+	last_chr_s="${scriptsDir: -1}"
+
+	if [[ "$last_chr_s" == "/" ]]; then
+		scriptsDir="${scriptsDir%?}"
+	fi
+
+	if [[ "$scriptsDir" == "." ]];then
+		scriptsDir="$PWD"
+
+	elif [[ "${scriptsDir: -2}" == ".." ]];then
+		scriptsDir="$PWD/$scriptsDir"
+	fi
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+	fi
+
+
+	if [[ "$gs" -le 100 ]]; then
+		xml="$scriptsDir/optArguments_small.xml"
+
+	elif [[ "$gs" -gt 100 ]] && [[ "$gs" -le 1000 ]]; then
+		xml="$scriptsDir/optArguments_medium.xml"
+	else
+		xml="$scriptsDir/optArguments_human.xml"
+	fi
+
+	echo "========================================= SV detection starts ========================================"
+	echo "## Start date: `date`"
+	echo "## The ref cmap file is: $ref"
+	echo "## The final assembled folder is: $final"
+	echo "## The genome size is (Mb): $gs"
+	echo "## The path of Binano tools folder is: $toolsDir"
+	echo "## The path of BNG scripts folder is: $scriptsDir"
+	echo "## The maximum threads is: $maxthreads"
+	echo "## The output directory is: $outDir"
+	echo
+	python "$scriptsDir"/runSV.py -t "$toolsDir" -r "$ref" -q "$final" -o "$outDir" -a "$xml" -T "$maxthreads" >&1
+	echo
+	echo "## End date: `date`"
+	echo "====================================================================================================="
+
+
+fi
+
+##======================= Select "hybrid" flag =======================
+##Print help if only select hybrid
+if [[ $1 == "hybrid" ]] && [[ $# -eq 1 ]];then
+	echo -e "$hy_msg_d"
+	echo -e "$hy_msg";
+	exit 0;
+fi
+##Select "hybrid" flag
+if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
+	arg1=$1
+	shift
+	hy_options=':hs:t:r:b:m:l:e:B:N:z:f:c:u:g:d:p:o:T:M:';
+	while getopts "$hy_options" opt; do
+		case "$opt" in
+			h) echo -e "$hy_msg_d";echo -e "$hy_msg"; exit 0;;
+			s) scriptsDir=${OPTARG};;
+			t) toolsDir=${OPTARG};;
+			r) NGS=${OPTARG};;
+			b) bnx=${OPTARG};;
+			m) minLen=${OPTARG};;
+			l) minEnzy=${OPTARG};;
+			e) enzyme=${OPTARG};;
+			B) BNGf=${OPTARG};;
+			N) NGSf=${OPTARG};;
+			z) gs=${OPTARG};;
+			f) final=${OPTARG};;
+			c) intial=${OPTARG};;
+			u) chimeric=${OPTARG};;
+			g) merge=${OPTARG};;
+			d) dis=${OPTARG};;
+			p) ptg=${OPTARG};;
+			o) outDir=${OPTARG};;
+			T) maxthreads=${OPTARG};;
+			M) maxmem=${OPTARG};;
+			\?) echo;echo -e "Unknown option -$OPTARG">&2; echo; exit 0;;
+			:) echo;echo -e "Missing option argument for -$OPTARG">&2; echo; exit 1;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+
+	if [[ -z "$scriptsDir" ]] || [[ -z "$toolsDir" ]] || [[ -z "$NGS" ]] || [[ -z "$bnx" ]] || [[ -z "$BNGf" ]] || [[ -z "$NGSf" ]] || [[ -z "$gs" ]] || [[ -z "$final" ]] || [[ -z "$outDir" ]] || [[ -z "$maxthreads" ]] || [[ -z "$maxmem" ]];
+	then
+		echo
+		echo 'Some compulsory option is not given please check as following:';
+		echo -e "$hy_msg" 1>&2;exit 1;
+	fi
+	if [[ -z "$minLen" ]];then
+		minLen=20
+	fi
+	if [[ -z "$minEnzy" ]]; then
+		minEnzy=5
+	fi
+	if [[ -z "$enzyme" ]]; then
+		enzyme=BspQI
+	fi
+	if [[ -z "$intial" ]]; then
+		intial=1e-10
+	fi
+	if [[ -z "$chimeric" ]];then
+		chimeric=1e-13
+	fi
+	if [[ -z "$merge" ]];then
+		merge=1e-13
+	fi
+	if [[ -z "$dis" ]]; then
+		dis=10000
+	else
+		dis=`awk '{print $1*$2}' <<<"$dis 1000"`
+	fi
+	if [[ -z "$ptg" ]];then
+		ptg=35
+	fi
+
+	NGS=`readlink -f "$NGS"`
+	bnx=`readlink -f "$bnx"`
+	final=`readlink -f "$final"`
+
+	last_chr_t="${toolsDir: -1}"
+
+	if [[ "$last_chr_t" == "/" ]]; then
+		toolsDir="${toolsDir%?}"
+	fi
+
+	if [[ "$toolsDir" == "." ]];then
+		toolsDir="$PWD"
+
+	elif [[ "${toolsDir: -2}" == ".." ]];then
+		toolsDir="$PWD/$toolsDir"
+	fi
+	RefA="$toolsDir"/RefAligner
+	last_chr_s="${scriptsDir: -1}"
+
+	if [[ "$last_chr_s" == "/" ]]; then
+		scriptsDir="${scriptsDir%?}"
+	fi
+
+	if [[ "$scriptsDir" == "." ]];then
+		scriptsDir="$PWD"
+
+	elif [[ "${scriptsDir: -2}" == ".." ]];then
+		scriptsDir="$PWD/$scriptsDir"
+	fi
+
+	last_chr="${outDir: -1}"
+
+	if [[ "$last_chr" == "/" ]]; then
+		outDir="${outDir%?}"
+	fi
+
+	if [[ "$outDir" == "." ]];then
+		outDir="$PWD"
+
+	elif [[ "${outDir: -2}" == ".." ]];then
+		outDir="$PWD/$outDir"
+	fi
+
+	if [[ "$gs" -le 100 ]]; then
+		xml="$scriptsDir/optArguments_small.xml"
+
+	elif [[ "$gs" -gt 100 ]] && [[ "$gs" -le 1000 ]]; then
+		xml="$scriptsDir/optArguments_medium.xml"
+	else
+		xml="$scriptsDir/optArguments_human.xml"
+	fi
+
+	echo "========================================= Hybrid pipeline starts ========================================"
+	echo "## Start date: `date`"
+
+	cp -f "$scriptsDir"/HybridScaffold/hybridScaffold_config.xml "$outDir"/hybridScaffold_config_new.xml
+	RefAA=`echo "$RefA" | sed "s/\//::::/g"`
+
+	sed -i -e "s/\"refaligner\"\ val0=\"\~\/tools\/RefAligner\"/\"refaligner\"\ val0=\"$RefAA\"/" -e "s/val0=\"BspQI\"/val0=\"${enzyme}\"/" -e "s/\"minLength\"\ val0=\"0\"/\"minLength\"\ val0=\"${minLen}\"/" -e "s/\"minLabels\"\ val0=\"0\"/\"minLabels\"\ val0=\"${minEnzy}\"/" -e "s/\"maxmem\"\ val0=\"128\"/\"maxmem\"\ val0=\"${maxmem}\"/" -e "s/\"maxthreads\"\ val0=\"32\"/\"maxthreads\"\ val0=\"${maxthreads}\"/" "$outDir"/hybridScaffold_config_new.xml
+	sed -i -e "s/::::/\//g" "$outDir"/hybridScaffold_config_new.xml
+	Lintial=`grep -n "Initial alignment" "$outDir"/hybridScaffold_config_new.xml | cut -d":" -f1`
+	sed -i "${Lintial}s/1e-10/$intial/" "$outDir"/hybridScaffold_config_new.xml
+	sed -i -e "s/\"T_cutoff\"\ val0=\"1e-13\"/\"T_cutoff\"\ val0=\"$chimeric\"/" -e "s/\"window_size\"\ val0=\"10000\"/\"window_size\"\ val0=\"$dis\"/" -e "s/\"merge_Tvalue\"\ val0=\"1e-13\"/\"merge_Tvalue\"\ val0=\"$merge\"/" -e "s/val0=\"35\"\ display=\"Percent/val0=\"$ptg\"\ display=\"Percent/" "$outDir"/hybridScaffold_config_new.xml
+	perl "$scriptsDir"/HybridScaffold/hybridScaffold.pl -f -B "$BNGf" -N "$NGSf" -r "$RefA" -n "$NGS" -b "$final" -c "$outDir"/hybridScaffold_config_new.xml -o "$outDir" -x -m "$bnx" -p "$scriptsDir" -q "$xml"
+	rm -f "$outDir"/hybridScaffold_config_new.xml
+
+	echo "## End date: `date`"
+	echo "=========================================================================================================="
+
+fi
