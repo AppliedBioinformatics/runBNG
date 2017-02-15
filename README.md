@@ -8,9 +8,34 @@ Before using runBNG,
 
 After all required dependencies being set, You can use runBNG to start you analysis. 
 
-At present, runBNG offers 7 mainly used functions in BioNano analysis.
+At present, runBNG offers 7 mainly used functions in BioNano analysis, which are 
+* converting a fasta file into a cmap file, 
+* reporting the quality of the raw molecules, 
+* check repeats in the raw molecules, 
+* denovo assembly, 
+* hybrid scaffolding, 
+* structural variation detection and 
+* alignment between diffient cmap files.
 
-For detailed usage please refer to the wiki.
+Detailed usages are listed as below: 
+<pre>
+Description: This pipeline aims to complete all BioNano IrysView key functions using command line.
+
+Version: 1.0
+
+Usage: runBNG [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]
+        fa2cmap         convert a given fasta format file into a cmap file.
+        mol_qty         get a molecule quality report for the BioNano data.
+        repeatCheck     check repeats using BioNano raw data.
+        denovo          de novo assemble BioNao single molecule.
+        compare         compare two different cmap files.
+        hybrid          perform BioNano hybrid scaffolding.
+        SV              structural variation detection.
+
+Please select one of the given options and continue
+</pre>
+
+We have also supplied an testing datasets (Examples). You may use this dataset to test this software.
 
 Thanks for using runBNG!
 
