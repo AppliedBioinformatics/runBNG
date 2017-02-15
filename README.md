@@ -35,7 +35,7 @@ Usage: runBNG [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]
 Please select one of the given options and continue
 </pre>
 
-We have also supplied an testing datasets (Examples). You may use this dataset to test this software.
+We have also supplied a testing dataset (Examples). You may use this dataset to test this software.
 
 Thanks for using runBNG!
 
