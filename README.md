@@ -6,7 +6,7 @@ Before using runBNG,
 * Please download the latest BioNano IrysSolve from http://www.bnxinstall.com/RefAlignerAssembler and the latest BioNano scripts from http://www.bnxinstall.com/Scripts. To determine which accelerator type you should use, please use the command "grep avx /proc/cpuinfo" or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX as it is faster than SSE2.
 * Please enusre BioNano RefAligner, BioNano Assembler and BioNano scripts are executable.
 
-After all required dependencies being set, you can use runBNG to start you analysis. 
+After all required dependencies are been set, you can use runBNG to start your analysis. 
 
 At present, runBNG offers 7 mainly used functions in BioNano analysis, which are 
 * converting a fasta file into a cmap file, 
