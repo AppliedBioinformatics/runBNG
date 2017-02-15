@@ -27,7 +27,7 @@ Usage: runBNG [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]
         fa2cmap         convert a given fasta format file into a cmap file.
         mol_qty         get a molecule quality report for the BioNano data.
         repeatCheck     check repeats using BioNano raw data.
-        denovo          de novo assemble BioNao single molecule.
+        denovo          de novo assemble BioNao single molecules.
         compare         compare two different cmap files.
         hybrid          perform BioNano hybrid scaffolding.
         SV              structural variation detection.
