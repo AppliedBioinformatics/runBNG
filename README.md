@@ -11,7 +11,7 @@ After all required dependencies are been set, you can use runBNG to start your a
 At present, runBNG offers 7 mainly used functions in BioNano analysis, which are 
 * converting a fasta file into a cmap file, 
 * reporting the quality of the raw molecules, 
-* check repeats in the raw molecules, 
+* checking repeats in the raw molecules, 
 * denovo assembly, 
 * hybrid scaffolding, 
 * structural variation detection and 
