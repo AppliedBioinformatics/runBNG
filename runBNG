@@ -90,12 +90,13 @@ deno_msg="$deno_msg	-o	the path of output directory \n";
 
 ##Compare assembled BioNano data to a ref cmap file
 comp_msg_d="\nDescription: Compare a query BioNano cmap file to a ref cmap file";
-comp_msg="\nUsage: `basename $0` compare [-h] [-R <RefAligner>] [-r <ref_cmap>] [-q <qry_cmap>] [-o <outDir>]
-	[-p <output_name>] [-t <maxthreads>] [-m <maxmemory>]\n";
+comp_msg="\nUsage: `basename $0` compare [-h] [-R <RefAligner>] [-r <ref_cmap>] [-q <qry_cmap>] [-z <genome_size>]
+	[ -o <outDir>] [-p <output_name>] [-t <maxthreads>] [-m <maxmemory>]\n";
 comp_msg="$comp_msg	-h	display this help and exit.\n";
 comp_msg="$comp_msg	-R	BioNano RefAligner.\n";
 comp_msg="$comp_msg	-r	the reference cmap file.\n"
 comp_msg="$comp_msg	-q	the query cmap file.\n";
+comp_msg="$comp_msg	-z	the genome size of input species (Mb).\n";
 comp_msg="$comp_msg	-o	the full path of output.\n";
 comp_msg="$comp_msg	-p	A preferred name for the output files.\n";
 comp_msg="$comp_msg	-t	maximum threads.\n";
@@ -608,13 +609,14 @@ fi
 if [[ $1 == "compare" ]] && [[ $# -gt 1 ]];then
 	arg1=$1
 	shift
-	comp_options=':hR:r:q:o:p:t:m:';
+	comp_options=':hR:r:q:z:o:p:t:m:';
 	while getopts "$comp_options" opt; do
 		case "$opt" in
 			h) echo -e "$comp_msg_d";echo -e "$comp_msg"; exit 0;;
 			R) RefA=${OPTARG};;
 			r) ref=${OPTARG};;
 			q) qry=${OPTARG};;
+			z) gs=${OPTARG};;
 			o) outDir=${OPTARG};;
 			p) name=${OPTARG};;
 			t) maxthreads=${OPTARG};;
@@ -625,7 +627,7 @@ if [[ $1 == "compare" ]] && [[ $# -gt 1 ]];then
 	done
 	shift "$((OPTIND - 1))"
 
-	if [[ -z "$RefA" ]] || [[ -z "$ref" ]] || [[ -z "$qry" ]] || [[ -z "$outDir" ]] || [[ -z "$name" ]] || [[ -z "$maxthreads" ]] || [[ -z "$maxmem" ]];
+	if [[ -z "$RefA" ]] || [[ -z "$ref" ]] || [[ -z "$qry" ]] || [[ -z "$outDir" ]] || [[ -z "$name" ]] || [[ -z "$maxthreads" ]] || [[ -z "$maxmem" ]] || [[ -z "$gs" ]];
 	then
 		echo
 		echo 'Some compulsory option is not given please check as following:';
@@ -650,17 +652,19 @@ if [[ $1 == "compare" ]] && [[ $# -gt 1 ]];then
 	fi
 
 	outDir_full="$outDir/$name"
+	pv=`awk "BEGIN {print 1.0e-5/$gs}"`
 
 	echo "========================================== comparison starts ============================================="
 	echo "## Start date: `date`"
 	echo "## The ref cmap file is: $ref"
 	echo "## The qry cmap file is: $qry"
+	echo "## The genome size (Mb) is: $gs"
 	echo "## The Binano Refaligner is: $RefA"
 	echo "## The maximum threads is: $maxthreads"
 	echo "## The maximum RAM (Gb) is: $maxmem"
 	echo "## The output file names are: ${outDir_full}*"
 	echo
-	"$RefA" -f -ref "$ref" -i "$qry" -o "$outDir_full" -maxthreads "$maxthreads" -output-veto-filter _intervals.txt$ -res 2.9 -FP 0.6 -FN 0.06 -sf 0.20 -sd 0.0 -sr 0.01 -extend 1 -outlier 0.0001 -endoutlier 0.001 -PVendoutlier -deltaX 12 -deltaY 12 -xmapchim 12 -hashgen 5 7 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -hashMultiMatch 100 -insertThreads 4 -nosplit 2 -biaswt 0 -T 1e-12 -S -1000 -indel -PVres 2 -rres 0.9 -MaxSE 0.5 -HSDrange 1.0 -outlierBC -xmapUnique 12 -AlignRes 2. -outlierExtend 12 24 -Kmax 12 -f -maxmem "$maxmem" -BestRef 1 -stdout -stderr >&1
+	"$RefA" -f -ref "$ref" -i "$qry" -o "$outDir_full" -maxthreads "$maxthreads" -output-veto-filter _intervals.txt$ -res 2.9 -FP 0.6 -FN 0.06 -sf 0.20 -sd 0.0 -sr 0.01 -extend 1 -outlier 0.0001 -endoutlier 0.001 -PVendoutlier -deltaX 12 -deltaY 12 -xmapchim 12 -hashgen 5 7 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -hashMultiMatch 100 -insertThreads 4 -nosplit 2 -biaswt 0 -T "$pv" -S -1000 -indel -PVres 2 -rres 0.9 -MaxSE 0.5 -HSDrange 1.0 -outlierBC -xmapUnique 12 -AlignRes 2. -outlierExtend 12 24 -Kmax 12 -f -maxmem "$maxmem" -BestRef 1 -stdout -stderr >&1
 	echo
 	echo "## End date: `date`"
 	echo "========================================================================================================="
