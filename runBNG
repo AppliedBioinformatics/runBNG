@@ -932,16 +932,16 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
 	echo "========================================= Hybrid pipeline starts ========================================"
 	echo "## Start date: `date`"
 
-	cp -f "$scriptsDir"/HybridScaffold/hybridScaffold_config.xml "$outDir"/hybridScaffold_config_new.xml
+	cp -f "$scriptsDir"/HybridScaffold/hybridScaffold_config.xml "$outDir"/../hybridScaffold_config_new.xml
 	RefAA=`echo "$RefA" | sed "s/\//::::/g"`
 
-	sed -i -e "s/\"refaligner\"\ val0=\"\~\/tools\/RefAligner\"/\"refaligner\"\ val0=\"$RefAA\"/" -e "s/val0=\"BspQI\"/val0=\"${enzyme}\"/" -e "s/\"minLength\"\ val0=\"0\"/\"minLength\"\ val0=\"${minLen}\"/" -e "s/\"minLabels\"\ val0=\"0\"/\"minLabels\"\ val0=\"${minEnzy}\"/" -e "s/\"maxmem\"\ val0=\"128\"/\"maxmem\"\ val0=\"${maxmem}\"/" -e "s/\"maxthreads\"\ val0=\"32\"/\"maxthreads\"\ val0=\"${maxthreads}\"/" "$outDir"/hybridScaffold_config_new.xml
-	sed -i -e "s/::::/\//g" "$outDir"/hybridScaffold_config_new.xml
-	Lintial=`grep -n "Initial alignment" "$outDir"/hybridScaffold_config_new.xml | cut -d":" -f1`
-	sed -i "${Lintial}s/1e-10/$intial/" "$outDir"/hybridScaffold_config_new.xml
-	sed -i -e "s/\"T_cutoff\"\ val0=\"1e-13\"/\"T_cutoff\"\ val0=\"$chimeric\"/" -e "s/\"window_size\"\ val0=\"10000\"/\"window_size\"\ val0=\"$dis\"/" -e "s/\"merge_Tvalue\"\ val0=\"1e-13\"/\"merge_Tvalue\"\ val0=\"$merge\"/" -e "s/val0=\"35\"\ display=\"Percent/val0=\"$ptg\"\ display=\"Percent/" "$outDir"/hybridScaffold_config_new.xml
-	perl "$scriptsDir"/HybridScaffold/hybridScaffold.pl -f -B "$BNGf" -N "$NGSf" -r "$RefA" -n "$NGS" -b "$final" -c "$outDir"/hybridScaffold_config_new.xml -o "$outDir" -x -m "$bnx" -p "$scriptsDir" -q "$xml"
-	rm -f "$outDir"/hybridScaffold_config_new.xml
+	sed -i -e "s/\"refaligner\"\ val0=\"\~\/tools\/RefAligner\"/\"refaligner\"\ val0=\"$RefAA\"/" -e "s/val0=\"BspQI\"/val0=\"${enzyme}\"/" -e "s/\"minLength\"\ val0=\"0\"/\"minLength\"\ val0=\"${minLen}\"/" -e "s/\"minLabels\"\ val0=\"0\"/\"minLabels\"\ val0=\"${minEnzy}\"/" -e "s/\"maxmem\"\ val0=\"128\"/\"maxmem\"\ val0=\"${maxmem}\"/" -e "s/\"maxthreads\"\ val0=\"32\"/\"maxthreads\"\ val0=\"${maxthreads}\"/" "$outDir"/../hybridScaffold_config_new.xml
+	sed -i -e "s/::::/\//g" "$outDir"/../hybridScaffold_config_new.xml
+	Lintial=`grep -n "Initial alignment" "$outDir"/../hybridScaffold_config_new.xml | cut -d":" -f1`
+	sed -i "${Lintial}s/1e-10/$intial/" "$outDir"/../hybridScaffold_config_new.xml
+	sed -i -e "s/\"T_cutoff\"\ val0=\"1e-13\"/\"T_cutoff\"\ val0=\"$chimeric\"/" -e "s/\"window_size\"\ val0=\"10000\"/\"window_size\"\ val0=\"$dis\"/" -e "s/\"merge_Tvalue\"\ val0=\"1e-13\"/\"merge_Tvalue\"\ val0=\"$merge\"/" -e "s/val0=\"35\"\ display=\"Percent/val0=\"$ptg\"\ display=\"Percent/" "$outDir"/../hybridScaffold_config_new.xml
+	perl "$scriptsDir"/HybridScaffold/hybridScaffold.pl -f -B "$BNGf" -N "$NGSf" -r "$RefA" -n "$NGS" -b "$final" -c "$outDir"/../hybridScaffold_config_new.xml -o "$outDir" -x -m "$bnx" -p "$scriptsDir" -q "$xml"
+	rm -f "$outDir"/../hybridScaffold_config_new.xml
 
 	echo "## End date: `date`"
 	echo "=========================================================================================================="
