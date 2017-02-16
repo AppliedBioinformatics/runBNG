@@ -21,7 +21,7 @@ Detailed usages are listed as below:
 <pre>
 Description: This pipeline aims to complete all BioNano IrysView key functions using command line.
 
-Version: 1.0
+Version: 1.01
 
 Usage: runBNG [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]
         fa2cmap         convert a given fasta format file into a cmap file.
