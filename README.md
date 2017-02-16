@@ -37,7 +37,7 @@ Please select one of the given options and continue
 
 We have also supplied a testing dataset (Examples). You may use this dataset to test this software.
 
-During testing or in your own data analysis, if your have a NGS reference, we recommend to run 'runBNG mol_qty' with the reference first, and then you can use the generated report to adjust your parameter settings in the denovo assembly.  
+During testing or in your own data analysis, if you have a NGS reference, we recommend to run 'runBNG mol_qty' with the reference first, and then you can use the generated report to adjust your parameter settings in the denovo assembly.  
 
 Thanks for using runBNG!
 
