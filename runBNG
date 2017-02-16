@@ -17,7 +17,7 @@
 ###============================================= messages ===================================================
 ##Start message
 message="\nDescription: This pipeline aims to complete all BioNano IrysView key functions using command line.\n";
-message="$message	\nVersion: 1.0\n";
+message="$message	\nVersion: 1.01\n";
 message="$message	\nUsage: `basename $0` [fa2cmap] [mol_qty] [repeatCheck] [denovo] [compare] [hybrid] [SV]\n";
 message="$message	fa2cmap		convert a given fasta format file into a cmap file.\n";
 message="$message	mol_qty		get a molecule quality report for the BioNano data.\n"
