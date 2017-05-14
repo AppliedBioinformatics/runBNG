@@ -36,7 +36,7 @@ Usage: runBNG [fa2cmap] [cmapstats] [bnxmerge] [bnxstats] [bnxfilter] [MQR] [rep
 
 Please select one of the given options and continue </pre>
 
-## Requirments 
+##  Dependencies
 * please ensure your system satisfies the configuration below: 
 <pre>
   •bash 4.0 or greater
