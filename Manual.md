@@ -7,12 +7,12 @@
 
 * The requried dependencies are:
  <pre>
+  •Ubuntu LTS or CentOS 6.4 or newer
   •bash 4.0 or newer
   •python v2.7.5 or newer 
   •perl v5.10.x, v5.14.x or v5.16.x
   •gcc 4.4.7 or newer
   •glibc 2.15 or newer 
-  •Ubuntu LTS or CentOS 6.4 or newer 
   •BioNano tools
   •BioNano scripts </pre>
 
@@ -24,7 +24,7 @@
     or installed. If there is no error raise, it means all dependencies are installed and set properly
     to run 'runBNG'.
 
-   b) If the system is not sastified, We are afraid users cannot use this software on their system. 
+   b) If the system is not sastified, we are afraid users cannot use this software in their system. 
 
 2) How to install needed dependencies.
   <pre>
@@ -43,7 +43,7 @@
       gcc: https://gcc.gnu.org/releases.html
       glibc: https://www.gnu.org/software/libc
       
-    each provided website has a detailded instruction showing how to install corresponding software. 
+    Each provided website has a detailded instruction showing how to install corresponding software. 
     Users may follow those instructions and install needed dependencies.
 
     BioNano scripts can be downloaded at: http://www.bnxinstall.com/Scripts
@@ -54,8 +54,8 @@
     
 3) Once all needed dependencies installed, users may go to the runBNG directory again and type '/runBNG' 
     to check wheter the dependencies are set properly. If there are still errors, users may use:
-    export "PATH=/path/to/installed/needed_dependency:$PATH" to set each dependencies
-    for instance: 
+    "export PATH=/path/to/installed/needed_dependency:$PATH" to set each dependencies. 
+    For instance: 
     <pre>
       export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/glibc/2.19/bin:$PATH
@@ -286,7 +286,7 @@ Note:
     <pre>
     a) Users can select any of the given options to start their analyses. 
     b) Flags without 'optional' indicated are all mandatory. Errors will be raised when they are not specified.
-    c) It is suggested to run 'MQR' first before running 'denovo', because the result for 'MQR' can help to adjust the parameters in 'denovo'.
+    c) It is suggested to run 'MQR' first before running 'denovo', because the result from 'MQR' can be used to adjust the parameters in 'denovo', such as 'flase positive density', 'false negative rate' and 'siteSD'.
     d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
     e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.</pre>
     
