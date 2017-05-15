@@ -1,19 +1,12 @@
-################################################################################################
-#  This is a manual showing how to use 'runBNG'                                                #
-#  Written by: Andy Yuan                                                                       #
-#  Created date: 14 May 2017                                                                   #
-#  Location: UWA, Perth, Australia                                                             #
-#  Email: yuxuan.yuan@outlook.com                                                              #
-################################################################################################
-
+# A manual helps to use 'runBNG'                                                
 Thanks for using'runBNG'
 This manual helps to set and run 'runBNG'.
-Users may read this manual carefully before using 'runBNG', which could bring a better experience
-in using 'runBNG'.
+Users may read this manual carefully before using 'runBNG', which could bring a better experience in using 'runBNG'.
 
-# Dependencies installation 
+## Dependencies installation 
 
 The requried dependencies are:
+  <pre>
   •bash 4.0 or newer
   •python v2.7.5 or newer 
   •perl v5.10.x, v5.14.x or v5.16.x
@@ -21,27 +14,29 @@ The requried dependencies are:
   •glibc 2.15 or newer 
   •Ubuntu LTS or CentOS 6.4 or newer 
   •BioNano tools
-  •BioNano scripts
+  •BioNano scripts </pre>
 
 1) Before installing all needed dependencise, Users may check their system first. Open the 'Terminal'
    and type, for example 'lsb_release -a' to check whether the system is satisfied.
 
-   a)If the system is satisfied, users may go to runBNG directory and type './runBNG'
+   a) If the system is satisfied, users may go to runBNG directory and type './runBNG'
     in the 'Terminal'. 'runBNG' will check the system and tell which dependency needs to be set 
     or installed. If there is no error raise, it means all dependencies are installed and set properly
     to run 'runBNG'.
 
-   b)If the system is not sastified, We are afraid users cannot use this software on their system. 
+   b) If the system is not sastified, We are afraid users cannot use this software on their system. 
 
 2) How to install needed dependencies.
 
-    Option 1: Using 'linuxbrew'
+    1) Using 'linuxbrew'
+    <pre>
     Users may follow the introduction from http://linuxbrew.sh to install 'linuxbrew' on their system.
     After setting 'linuxbrew' to $PATH, users are able to use 'brew' to install all needed dependencies. 
-    For example: brew install bash; brew install python; brew install perl@5.14; brew install gcc; 
-    brew install glibc 
+    For example: brew install bash; brew install python; brew install perl@5.14; brew install gcc; and
+    brew install glibc </pre>
 
-    Option 2: Using source code
+    2) Using source code
+        <pre>
         bash: https://www.gnu.org/software/bash
         python: https://www.python.org/downloads/release
         perl: http://www.cpan.org/src/README.html
@@ -54,23 +49,25 @@ The requried dependencies are:
     Linux version BioNano tools can be downloaded at: http://www.bnxinstall.com/RefAlignerAssembler
     To determine which accelerator type should be used, please use the command "grep avx /proc/cpuinfo" 
     or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX 
-    as it is faster than SSE2.
+    as it is faster than SSE2.</pre>
     
 3) Once all needed dependencies installed, users may go to the runBNG directory again and type '/runBNG' 
     to check wheter the dependencies are set properly. If there are still errors, users may use:
     export "PATH=/path/to/installed/needed_dependency:$PATH" to set each dependencies
     for instance: 
+        <pre>
         export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
         export PATH=$HOME/.linuxbrew/Cellar/glibc/2.19/bin:$PATH
         export PATH=$HOME/.linuxbrew/perl514/5.14.4/bin:$PATH
         export PATH=$HOME/.linuxbrew/python/2.7.11/bin:$PATH
-        export PATH=$HOME/.linuxbrew/bash/4.3.42/bin:$PATH
+        export PATH=$HOME/.linuxbrew/bash/4.3.42/bin:$PATH</pre>
 
 4) After all settings being done, 'runBNG' should work in the satisfied linux system.
 
-# Run 'runBNG'
+## Run 'runBNG'
 
 1) Functions provided by 'runBNG' are: 
+    <pre>
     •converting a fasta file into a cmap file,
     •checking the quality of the raw molecule maps,
     •filtering out unqualified single molecule maps depending on the aims of research
@@ -81,12 +78,12 @@ The requried dependencies are:
     •denovo assembly,
     •hybrid scaffolding,
     •structural variation detection and
-    •alignment between different cmap files.
+    •alignment between different cmap files.</pre>
 
 2) Detailed usages:
     
     $runBNG -h
-
+    <pre>
     Description: This pipeline aims to complete key BioNano optical mapping analyses using command line.
 
     Version: 1.02
@@ -103,10 +100,10 @@ The requried dependencies are:
             compare         compare two different cmap files.
             hybrid          perform BioNano hybrid scaffolding.
             SV              structural variation detection.
-    Please select one of the given options and continue
+    Please select one of the given options and continue</pre>
 
     $runBNG fa2cmap -h
-
+    <pre>
     Description: Digest a given fasta format file into a cmap file using particular enzyme.
 
     Usage: runBNG fa2cmap [-h] [-f <fasta_file>] [-o <outDir>] [-e <enzyme_name>] [-q <enzyme_sequence>]
@@ -118,10 +115,10 @@ The requried dependencies are:
             -q      sequence of the enzyme when -e is not given (optional).
             -z      filter criteria: min molecule length. Default 20 (Kb) (optional).
             -l      filter criteria: min number of selected enzymes in the molecule. Default is 5 (optional).
-            -s      full path to BioNano scripts folder.
+            -s      full path to BioNano scripts folder.</pre>
    
     $runBNG cmapstats -h 
-
+    <pre>
     Description: Get stats of a cmap file.
 
     Usage: runBNG cmapstats [-h] [-c <cmap>] [-s<scripts>]
@@ -142,20 +139,20 @@ The requried dependencies are:
             -m      memory (Gb).
             -p      a name for the merged file.
             -r      full path to BioNano RefAligner.
-            -o      output directory.
+            -o      output directory.</pre>
 
     $runBNG bnxstats -h 
-
+    <pre>
     Description: Check stats of a given bnx file (N_molecules, length, label density, SNR, intensity).
 
     Usage: runBNG bnxstats [-h] [-b <bnx>]
             -h      display this help and exit.
             -b      the bnx file.
             -p      a name for the table extracted from the bnx file.
-            -o      output directory.
+            -o      output directory.</pre>
     
     $runBNG bnxfilter -h 
-
+    <pre>
     Description: Molecule map quality control--filter unqualified molecule maps and get a new bnx file.
 
     Usage: runBNG bnxfilter [-h] [-b <bnx>] [-t <maxthreads>] [-p <name>] [-r <RefAligner>] [-l <minlen>]
@@ -171,10 +168,10 @@ The requried dependencies are:
             -M      max number of selected enzymes in the molecule. Default is 200 (optional).
             -i      maxIntensity to be filtered. Default is 0.6 (optional).
             -x      reduce resolution of input molecule maps by xxx*500bp. Default is 0.001 (optional).
-            -o      output directory.
+            -o      output directory.</pre>
 
     $runBNG MQR -h
-
+    <pre>
     Description: Report the quality of given BioNano single molecules.
 
     Usage: runBNG MQR [-h] [-b <bnx>] [-r <ref_cmap>] [-R <RefAligner>] [-t <maxthreads>] [-m <maxRAM>] [-s<minLen>]
@@ -193,10 +190,10 @@ The requried dependencies are:
                     an input value >1000 (optional).
             -d      label density of the reference genome if -r is given (xxx/100Kb). For example: 10 (optional).
             -o      output directory.
-            -p      a name for the output files.
+            -p      a name for the output files.</pre>
 
     $runBNG denovo -h 
-
+    <pre>
     Description: De novo assembly for BioNano single molecules.
 
     Usage: runBNG denovo [-h] [-t <toolsDir>] [-s <scriptsDir>] [-b <bnx>] [-l <len>] [-m <site>] [-T <nthreads>] [-j <njobs>]
@@ -219,10 +216,10 @@ The requried dependencies are:
             -R      relativeSD. Default is 0.03 (optional).
             -L      large jobs maximum memory (GB). Default is 128 (optional).
             -S      small jobs maximum memory (GB). Default is 7.5 (optional).
-            -o      output directory.
+            -o      output directory.</pre>
 
     $runBNG compare -h 
-
+    <pre>
     Description: Compare a query BioNano cmap file to a ref cmap file
 
     Usage: runBNG compare [-h] [-R <RefAligner>] [-r <ref_cmap>] [-q <qry_cmap>] [-z <genome_size>]
@@ -235,10 +232,10 @@ The requried dependencies are:
             -o      output directory.
             -p      A name for the output files.
             -t      maximum threads or CPUs.
-            -m      Memory (Gb).
+            -m      Memory (Gb).</pre>
 
     $runBNG SV -h 
-
+    <pre>
     Description: Compare cmaps from different individuals to detect structural variation. If you want to use
             this function please perform BioNano denovo assembly first. You may use 'runBNG denovo'.
 
@@ -252,10 +249,10 @@ The requried dependencies are:
             -t      full path to BioNano tools folder.
             -z      the genome size of input species (Mb).
             -T      maximum threads or CPUs.
-            -o      output directory.
+            -o      output directory.</pre>
 
     $runBNG hybrid -h 
-
+    <pre>
     Description: Run the BNG hybrid assembly pipeline.
 
     Usage: runBNG hybrid [-h] [-s <scriptsDir>] [-t <toolsDir>] [-r <reference>] [-b <bnx>] [-m <minLen>] [-l <minEnzy>]
@@ -282,11 +279,12 @@ The requried dependencies are:
                     at that region. default is 35 (optional).
             -o      output directory.
             -T      maximum threads or CPUs.
-            -M      maximum RAMs (Gb).
+            -M      maximum RAMs (Gb).</pre>
 
-Note: 
+Note:
+    <pre>
     a) Users can select any of the given options to start their analyses. 
-    b) Without specify 'optional', all flag needs to be used in the corresponding Functions. Otherwise, an error will be raised.
+    b) Flags without 'optional' indicated are all mandatory. Errors will be raised when they are not specified.
     c) It is suggested to run 'MQR' first before running 'denovo', because the result for 'MQR' can help to adjust the parameters in 'denovo'.
     d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
-    e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.
+    e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.</pre>
