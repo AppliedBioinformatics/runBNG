@@ -2,14 +2,15 @@
 * Thanks for using'runBNG'
 * This manual helps to set and run 'runBNG'.
 * Users may read this manual carefully before using 'runBNG', which could bring a better experience in using 'runBNG'.
-* Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in their 'Terminal' to download 'runBNG' package.
+
+## Download 'runBNG'
+Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in their 'Terminal' to download 'runBNG' package.
 
 ## Dependencies installation 
 
 * The requried dependencies are:
  <pre>
   •Ubuntu LTS or CentOS 6.4 or newer
-  •bash 4.0 or newer
   •python v2.7.5 or newer 
   •perl v5.10.x, v5.14.x or v5.16.x
   •gcc 4.4.7 or newer
@@ -17,11 +18,11 @@
   •BioNano tools
   •BioNano scripts </pre>
 
-1) Before installing all needed dependencise, users may check their system first. Open the 'Terminal'
-   and type, for example 'lsb_release -a' to check whether the system is satisfied.
+1) Before installing all needed dependencise, users may check their system and see if it is satisfied to run 'runBNG'. 
+   Open the 'Terminal' and type, for example 'lsb_release -a' to check.
 
-   a) If the system is satisfied, users may go to runBNG directory and type 'chmod +x runBNG'
-    in the 'Terminal'. Once the executable permission is given to 'runBNG', type './runBNG'.
+   a) If the system is satisfied, users may 'cd' to 'runBNG directory' and type 'chmod +x runBNG'
+    in the 'Terminal'. Once the executable permission is given to 'runBNG', users may type './runBNG'.
     'runBNG' will check the system and tell which dependency needs to be set or installed. 
     If there is no error raise, it means all dependencies are installed and set properly to 
     run 'runBNG'.
@@ -32,7 +33,7 @@
   <pre>
    1) Using 'linuxbrew'
    
-    Users may follow the introduction from http://linuxbrew.sh to install 'linuxbrew' on their system.
+    Users may follow the introduction from http://linuxbrew.sh to install 'linuxbrew' in their system.
     After setting 'linuxbrew' to $PATH, users are able to use 'brew' to install all needed dependencies. 
     For example: brew install bash; brew install python; brew install perl@5.14; brew install gcc; and
     brew install glibc. 
