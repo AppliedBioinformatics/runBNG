@@ -1,3 +1,4 @@
+#!/bin/bash -l
 
 ################################################################################
 # This script aims to complete key BioNano OM analyses using command line.     #
@@ -28,24 +29,6 @@ if [[ ! -s "$RL" ]] || [[ ! -x "$RL" ]]; then
 	echo 
 	echo "Oops! It seems 'readlink' is not installed in your system or executable. Please check!"
 	echo; exit 
-fi
-
-##check bash
-Bash=`which bash`
-if [[ ! -s "$Bash" ]] || [[ ! -x "$Bash" ]]; then 
-	echo
-	echo "Oops! It seems 'bash' is not installed in your system or executable. Please check!"
-	echo; exit 1
-fi
-
-curr_v=`$Bash --version`
-bash_v=`echo $curr_v | cut -d" " -f4 | cut -d"." -f1`
-if [[ $bash_v -ge 4 ]]; then 
-	`#!${Bash} -l`
-else
-	echo
-	echo "Oops! It seems the default 'bash' is below version 4. Please check and change it to verion 4 or above."
-	echo; exit 1
 fi
 
 ##check python 
@@ -448,17 +431,6 @@ if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
 	echo
 	name=`basename "$fa" | cut -d"." -f1`
 	
-	BspQI="GCTCTTC"
-	BbvCI="CCTCAGC"
-	BsmI="GAATGC"
-	BsrDI="GCAATG"
-	bseCI="ATCGAT"
-	en1="BspQI"
-	en2="BbvCI"
-	en3="BsmI"
-	en4="BsrDI"
-	en5="bseCI"
-	
 	fa2cmap="$scriptsDir"/HybridScaffold/scripts/fa2cmap.pl
 	cmap_stat="$scriptsDir"/HybridScaffold/scripts/calc_cmap_stats.pl
 
@@ -473,15 +445,15 @@ if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
 
 	if [[ -z "$enz_n" ]] && [[ -n "$enz_s" ]]; then
 
-		if [[ "${enz_s,,}" = "${BspQI,,}" ]]; then
+		if [[ `echo "$enz_s" | grep -qi '^GCTCTTC$' && echo "yes" || echo "no"` == "yes" ]]; then
 			enz_n=BspQI
-		elif [[ "${enz_s,,}" = "${BbvCI,,}" ]];then
+		elif [[ `echo "$enz_s" | grep -qi '^CCTCAGC$' && echo "yes" || echo "no"` == "yes" ]];then
 			enz_n=BbvCI
-		elif [[ "${enz_s,,}" = "${BsmI,,}" ]];then
+		elif [[ `echo "$enz_s" | grep -qi '^GAATGC$' && echo "yes" || echo "no"` == "yes" ]];then
 			enz_n=BsmI
-		elif [[ "${enz_s,,}" = "${BsrDI,,}" ]];then
+		elif [[ `echo "$enz_s" | grep -qi '^GCAATG$' && echo "yes" || echo "no"` == "yes" ]];then
 			enz_n=BsrDI
-		elif [[ "${enz_s,,}" = "${bseCI,,}" ]];then
+		elif [[ `echo "$enz_s" | grep -qi '^ATCGAT$' && echo "yes" || echo "no"` == "yes" ]];then
 			enz_n=bseCI
 		else
 			echo "Oops! We cannot recognise the enzyme sequence. Please check or contact us for a solution"
@@ -494,26 +466,24 @@ if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
 	fi
 
 	if [[ -n "$enz_n" ]] && [[ -z "$enz_s" ]]; then
-		if [[ "${enz_n,,}" = "${en1,,}" ]] || [[ "${enz_n,,}" = "${en2,,}" ]] || [[ "${enz_n,,}" = "${en3,,}" ]] || [[ "${enz_n,,}" = "${en4,,}" ]] || [[ "${enz_n,,}" = "${en5,,}" ]]; then
-			if [[ "${enz_n,,}" = "${en1,,}" ]]; then
-				enz_n=$en1
-			elif [[ "${enz_n,,}" = "${en2,,}" ]]; then
-				enz_n=$en2
-			elif [[ "${enz_n,,}" = "${en3,,}" ]]; then
-				enz_n=$en3
-			elif [[ "${enz_n,,}" = "${en4,,}" ]]; then
-				enz_n=$en4
-			else
-				enz_n=$en5
-    	fi
-			perl "$scriptsDir"/HybridScaffold/scripts/fa2cmap.pl -i "$fa" -o "$outDir" -n "$enz_n" -m "$minEnzy" -M "$minLen"
+		if [[ `echo "$enz_n" | grep -qi '^BspQI$' && echo "yes" || echo "no"` == "yes" ]]; then
+			enz_n=BspQI
+		elif [[ `echo "$enz_n" | grep -qi '^BbvCI$' && echo "yes" || echo "no"` == "yes" ]]; then
+			enz_n=BbvCI
+		elif [[ `echo "$enz_n" | grep -qi '^BsmI$' && echo "yes" || echo "no"` == "yes" ]]; then
+			enz_n=BsmI
+		elif [[ `echo "$enz_n" | grep -qi '^BsrDI$' && echo "yes" || echo "no"` == "yes" ]]; then
+			enz_n=BsrDI
+		elif [[ `echo "$enz_n" | grep -qi '^bseCI$' && echo "yes" || echo "no"` == "yes" ]]; then 
+			enz_n=bseCI
 		else
 			echo "Oops! We cannot recognise the enzyme name. Please check or contact us for a solution"
 			echo
 			echo "## End date: `date`"
 			echo "======================================================================================================="
-			exit 1;
+    		exit 1;
 		fi
+		perl "$scriptsDir"/HybridScaffold/scripts/fa2cmap.pl -i "$fa" -o "$outDir" -n "$enz_n" -m "$minEnzy" -M "$minLen"
 	fi
 	echo "Stats of the generated cmap file:"
 	perl ${scriptsDir}/HybridScaffold/scripts/calc_cmap_stats.pl ${outDir}/fa2cmap/${name}_${enz_n}_${minLen}Kb_${minEnzy}labels.cmap
