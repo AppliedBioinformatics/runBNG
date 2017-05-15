@@ -42,11 +42,11 @@ The requried dependencies are:
     brew install glibc 
 
     Option 2: Using source code
-        bash: https://www.gnu.org/software/bash/
+        bash: https://www.gnu.org/software/bash
         python: https://www.python.org/downloads/release
         perl: http://www.cpan.org/src/README.html
         gcc: https://gcc.gnu.org/releases.html
-        glibc: https://www.gnu.org/software/libc/
+        glibc: https://www.gnu.org/software/libc
     each provided website has a detailded instruction showing how to install corresponding software. 
     Users may follow those instructions and install needed dependencies.
 
