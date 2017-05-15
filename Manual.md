@@ -2,6 +2,7 @@
 * Thanks for using'runBNG'
 * This manual helps to set and run 'runBNG'.
 * Users may read this manual carefully before using 'runBNG', which could bring a better experience in using 'runBNG'.
+* Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in their 'Terminal' to download 'runBNG' package first.
 
 ## Dependencies installation 
 
