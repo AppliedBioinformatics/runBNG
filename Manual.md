@@ -17,7 +17,7 @@
   •BioNano tools
   •BioNano scripts </pre>
 
-1) Before installing all needed dependencise, Users may check their system first. Open the 'Terminal'
+1) Before installing all needed dependencise, users may check their system first. Open the 'Terminal'
    and type, for example 'lsb_release -a' to check whether the system is satisfied.
 
    a) If the system is satisfied, users may go to runBNG directory and type 'chmod +x runBNG'
