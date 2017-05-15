@@ -61,6 +61,6 @@ A manual detailing how to set and use 'runBNG' has been provided in the [Manual]
 
 We have also supplied a testing dataset ([Examples](https://github.com/AppliedBioinformatics/runBNG/tree/master/Examples)). You may use this dataset to test this software.
 
-Any problem in using 'runBNG' can be raised in the [Issuse](https://github.com/AppliedBioinformatics/runBNG/issues).
+Any problem in using 'runBNG' can be raised in the [Issues](https://github.com/AppliedBioinformatics/runBNG/issues).
 
 Thanks for using 'runBNG'! 
