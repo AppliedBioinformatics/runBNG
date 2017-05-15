@@ -36,8 +36,8 @@ The requried dependencies are:
 2) How to install needed dependencies.
 
     Option 1: Using 'linuxbrew'
-    Users may follow the introduction from http://linuxbrew.sh to install linuxbrew on their system.
-    After setting linuxbrew to $PATH, users are able to use brew to install all needed dependencies. 
+    Users may follow the introduction from http://linuxbrew.sh to install 'linuxbrew' on their system.
+    After setting 'linuxbrew' to $PATH, users are able to use 'brew' to install all needed dependencies. 
     For example: brew install bash; brew install python; brew install perl@5.14; brew install gcc; 
     brew install glibc 
 
@@ -51,11 +51,11 @@ The requried dependencies are:
     Users may follow those instructions and install needed dependencies.
 
     BioNano scripts can be downloaded at: http://www.bnxinstall.com/Scripts
+    Linux version BioNano tools can be downloaded at: http://www.bnxinstall.com/RefAlignerAssembler
     To determine which accelerator type should be used, please use the command "grep avx /proc/cpuinfo" 
     or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX 
     as it is faster than SSE2.
-    Linux version BioNano tools can be downloaded at: http://www.bnxinstall.com/RefAlignerAssembler
-
+    
 3) Once all needed dependencies installed, users may go to the runBNG directory again and type '/runBNG' 
     to check wheter the dependencies are set properly. If there are still errors, users may use:
     export "PATH=/path/to/installed/needed_dependency:$PATH" to set each dependencies
@@ -66,7 +66,7 @@ The requried dependencies are:
         export PATH=$HOME/.linuxbrew/python/2.7.11/bin:$PATH
         export PATH=$HOME/.linuxbrew/bash/4.3.42/bin:$PATH
 
-4) After all settings above, 'runBNG' should work in the satisfied linux system.
+4) After all settings being done, 'runBNG' should work in the satisfied linux system.
 
 # Run 'runBNG'
 
@@ -286,6 +286,7 @@ The requried dependencies are:
 
 Note: 
     a) Users can select any of the given options to start their analyses. 
-    b) Without specify 'optional', all flag needs to be used in the corresponding Functions. Otherwise, error will be raised.
+    b) Without specify 'optional', all flag needs to be used in the corresponding Functions. Otherwise, an error will be raised.
     c) It is suggested to run 'MQR' first before running 'denovo', because the result for 'MQR' can help to adjust the parameters in 'denovo'.
-    d) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.
+    d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
+    e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.
