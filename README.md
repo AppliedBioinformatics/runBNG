@@ -56,7 +56,7 @@ Please select one of the given options and continue </pre>
 
 After all required dependencies are set, you can use 'runBNG' to start your analyses.  
 
-A manual details how to set and use 'runBNG' has been provided in the [Manual](https://github.com/AppliedBioinformatics/runBNG/blob/master/Manual).
+A manual detailing how to set and use 'runBNG' has been provided in the [Manual](https://github.com/AppliedBioinformatics/runBNG/blob/master/Manual).
 
 We have also supplied a testing dataset ([Examples](https://github.com/AppliedBioinformatics/runBNG/tree/master/Examples)). You may use this dataset to test this software.
 
