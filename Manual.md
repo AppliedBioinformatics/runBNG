@@ -19,10 +19,11 @@
 1) Before installing all needed dependencise, Users may check their system first. Open the 'Terminal'
    and type, for example 'lsb_release -a' to check whether the system is satisfied.
 
-   a) If the system is satisfied, users may go to runBNG directory and type './runBNG'
-    in the 'Terminal'. 'runBNG' will check the system and tell which dependency needs to be set 
-    or installed. If there is no error raise, it means all dependencies are installed and set properly
-    to run 'runBNG'.
+   a) If the system is satisfied, users may go to runBNG directory and type 'chmod +x runBNG'
+    in the 'Terminal'. Once the executable permission is given to 'runBNG', type './runBNG'.
+    'runBNG' will check the system and tell which dependency needs to be set or installed. 
+    If there is no error raise, it means all dependencies are installed and set properly to 
+    run 'runBNG'.
 
    b) If the system is not sastified, we are afraid users cannot use this software in their system. 
 
