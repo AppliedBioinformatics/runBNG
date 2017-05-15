@@ -61,9 +61,9 @@
     <pre>
       export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/glibc/2.19/bin:$PATH
-      export PATH=$HOME/.linuxbrew/perl514/5.14.4/bin:$PATH
-      export PATH=$HOME/.linuxbrew/python/2.7.11/bin:$PATH
-      export PATH=$HOME/.linuxbrew/bash/4.3.42/bin:$PATH </pre>
+      export PATH=$HOME/.linuxbrew/Cellar/perl514/5.14.4/bin:$PATH
+      export PATH=$HOME/.linuxbrew/Cellar/python/2.7.11/bin:$PATH
+      export PATH=$HOME/.linuxbrew/Cellar/bash/4.3.42/bin:$PATH </pre>
 
 4) After all settings being done, 'runBNG' should work in the satisfied linux system.
 
