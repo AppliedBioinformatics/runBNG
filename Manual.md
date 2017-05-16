@@ -290,5 +290,5 @@ Note:
     b) Flags without 'optional' indicated are all mandatory. Errors will be raised when they are not specified.
     c) It is suggested to run 'MQR' first before running 'denovo', because the result from 'MQR' can be used to adjust the parameter settings in 'denovo', such as 'flase positive density', 'false negative rate' and 'siteSD'.
     d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
-    e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.</pre>
+    e) 'SV' and 'hybrid' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV' and 'hybrid'.</pre>
     
