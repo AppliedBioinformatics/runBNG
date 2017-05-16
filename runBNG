@@ -1021,7 +1021,7 @@ if [[ $1 == "MQR" ]] && [[ $# -gt 1 ]];then
 
 	outDir_full="$outDir/$name"
 
-	echo $pv
+	#echo $pv
 
 	echo "====================================== Checking the molecule quality ======================================="
 	echo "## Start date: `date`"
