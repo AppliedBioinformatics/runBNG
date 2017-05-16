@@ -28,7 +28,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
     If there is no error raise, it means all dependencies are installed and set properly to 
     run 'runBNG'.
 
-   b) If the system is not sastified, we are afraid users cannot use this software in their system. 
+   b) If the system is not satisfied, we are afraid users cannot use this software in their system. 
 
 2) How to install needed dependencies.
   <pre>
@@ -57,7 +57,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
     
 3) Once all needed dependencies installed, users may go to the runBNG directory again and type '/runBNG' 
     to check wheter the dependencies are set properly. If there are still errors, users may use:
-    "export PATH=/path/to/installed/needed_dependency:$PATH" to set each dependencies. 
+    "export PATH=/path/to/installed/needed_dependency:$PATH" to set each dependency. 
     For instance: 
     <pre>
       export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
@@ -288,7 +288,7 @@ Note:
     <pre>
     a) Users can select any of the given options to start their analyses. 
     b) Flags without 'optional' indicated are all mandatory. Errors will be raised when they are not specified.
-    c) It is suggested to run 'MQR' first before running 'denovo', because the result from 'MQR' can be used to adjust the parameters in 'denovo', such as 'flase positive density', 'false negative rate' and 'siteSD'.
+    c) It is suggested to run 'MQR' first before running 'denovo', because the result from 'MQR' can be used to adjust the parameter settings in 'denovo', such as 'flase positive density', 'false negative rate' and 'siteSD'.
     d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
     e) 'SV' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV'.</pre>
     
