@@ -10,7 +10,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
 
 * The requried dependencies are:
  <pre>
-  •Ubuntu LTS or CentOS 6.4 or newer
+  •Ubuntu LTS or CentOS 6.4 or newer or other equivalent Linux system
   •python v2.7.5 or newer 
   •perl v5.10.x, v5.14.x or v5.16.x
   •gcc 4.4.7 or newer
@@ -19,10 +19,11 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
   •BioNano scripts </pre>
 
 1) Before installing all needed dependencise, users may check their system and see if it is satisfied to run 'runBNG'. 
-   Open the 'Terminal' and type, for example 'lsb_release -a' to check.
+   Open the 'Terminal' and type, for example 'lsb_release -a' to check. If users use Ubuntu, please use LTS version. If users use 
+   CentOS, please use version 6.4 or greater. Other Linux sytem, such as Redhat, Fedora, SUSE, Arch Linux and Debian, they may use equivalent version.
 
    a) If the system is satisfied, users may 'cd' to 'runBNG directory' and type 'chmod +x runBNG'
-    in the 'Terminal'. Once the executable permission is given to 'runBNG', users may type './runBNG'.
+    in the 'Terminal'. Once the executable permission is given to 'runBNG', users may type './runBNG', and then
     'runBNG' will check the system and tell which dependency needs to be set or installed. 
     If there is no error raise, it means all dependencies are installed and set properly to 
     run 'runBNG'.
@@ -40,7 +41,6 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
 
    2) Using source code
    
-      bash: https://www.gnu.org/software/bash
       python: https://www.python.org/downloads/release
       perl: http://www.cpan.org/src/README.html
       gcc: https://gcc.gnu.org/releases.html
@@ -63,8 +63,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
       export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/glibc/2.19/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/perl514/5.14.4/bin:$PATH
-      export PATH=$HOME/.linuxbrew/Cellar/python/2.7.11/bin:$PATH
-      export PATH=$HOME/.linuxbrew/Cellar/bash/4.3.42/bin:$PATH </pre>
+      export PATH=$HOME/.linuxbrew/Cellar/python/2.7.11/bin:$PATH </pre>
 
 4) After all settings being done, 'runBNG' should work in the satisfied linux system.
 
