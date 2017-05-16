@@ -20,7 +20,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
 
 1) Before installing all needed dependencise, users may check their system and see if it is satisfied to run 'runBNG'. 
    Open the 'Terminal' and type, for example 'lsb_release -a' to check. If users use Ubuntu, please use LTS version. If users use 
-   CentOS, please use version 6.4 or greater. Other Linux sytem, such as Redhat, Fedora, SUSE, Arch Linux and Debian, they may use equivalent version.
+   CentOS, please use version 6.4 or greater. Other Linux system, such as Redhat, Fedora, SUSE, Arch Linux and Debian, they may use equivalent version.
 
    a) If the system is satisfied, users may 'cd' to 'runBNG directory' and type 'chmod +x runBNG'
     in the 'Terminal'. Once the executable permission is given to 'runBNG', users may type './runBNG', and then
