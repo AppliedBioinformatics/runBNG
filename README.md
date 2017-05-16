@@ -40,14 +40,14 @@ Please select one of the given options and continue </pre>
 ##  Dependencies
 * please ensure your system satisfies the configuration below: 
 <pre>
-  •Ubuntu LTS or CentOS 6.4 or above
+  •Ubuntu LTS or CentOS 6.4 or above or other equivalent Linux system
   •python v2.7.5 or greater 
   •perl v5.10.x, v5.14.x or v5.16.x
   •gcc 4.4.7 or greater 
   •glibc 2.15 or greater </pre>
-* Please download the latest BioNano tools (Linux version) and the latest BioNano scripts. To determine which accelerator type should be used, please use the command "grep avx /proc/cpuinfo" or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX as it is faster than SSE2.
+* Please download the latest BioNano tools (Linux version) and the latest BioNano scripts. To determine which accelerator type should be used when selecting BioNano tools, please use the command "grep avx /proc/cpuinfo" or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX as it is faster than SSE2.
  <pre>
-   You may download BioNano scripts and tools from:
+   BioNano scripts and tools can be downloaded at:
    
    BioNano tools: http://www.bnxinstall.com/RefAlignerAssembler
    
