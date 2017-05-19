@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash 
 
 ################################################################################
 # This script aims to complete key BioNano OM analyses using command line.     #
