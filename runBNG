@@ -62,7 +62,7 @@ fi
 
 pl_v=`perl -e 'print $];'`
 
-check1=`awk '{ if ($1 >=5.010 && $1 <5.020) print "yes"}' <<< "$pl_v"`
+check1=`awk '{ if ($1 >=5.010 && $1 <5.011) print "yes"}' <<< "$pl_v"`
 check2=`awk '{ if ($1 >=5.014 && $1 <5.015) print "yes"}' <<< "$pl_v"`
 check3=`awk '{ if ($1 >=5.016 && $1 <5.017) print "yes"}' <<< "$pl_v"`
 
