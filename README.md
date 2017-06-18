@@ -62,4 +62,7 @@ We have also supplied a testing dataset ([Examples](https://github.com/AppliedBi
 
 Any problem in using 'runBNG' can be raised in the [Issues](https://github.com/AppliedBioinformatics/runBNG/issues).
 
+## Citation
+Yuxuan Yuan, Philipp E. Bayer, HueyTyng Lee, David Edwards; runBNG: A software package for BioNano genomic analysis on the command line. Bioinformatics 2017 btx366. doi: 10.1093/bioinformatics/btx366
+
 Thanks for using 'runBNG'! 
