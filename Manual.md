@@ -63,6 +63,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
       export PATH=$HOME/.linuxbrew/Cellar/gcc/5.3.0/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/glibc/2.19/bin:$PATH
       export PATH=$HOME/.linuxbrew/Cellar/perl514/5.14.4/bin:$PATH
+      export PERL5LIB=$HOME/.linuxbrew/Cellar/perl514/5.14.4/lib/5.14.4"${PERL5LIB:+:$PERL5LIB}"
       export PATH=$HOME/.linuxbrew/Cellar/python/2.7.11/bin:$PATH </pre>
 
 4) After all settings being done, 'runBNG' should work in the satisfied linux system.
