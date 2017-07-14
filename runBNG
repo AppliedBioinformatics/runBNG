@@ -1251,7 +1251,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
 		len=150
 	fi
 
-	if [[ -z "site" ]]; then 
+	if [[ -z "$site" ]]; then 
 		site=8
 	fi
 
