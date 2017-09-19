@@ -429,7 +429,7 @@ if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
 	echo "## The min number of enzyme in a molecule is: ${minEnzy}"
 	echo "## The path to BiNano scripts folder is: ${scriptsDir}"
 	echo
-	name=`basename "$fa" | cut -d"." -f1`
+	name=`basename "$fa" | rev | cut -d"." -f2- | rev`
 	
 	fa2cmap="$scriptsDir"/HybridScaffold/scripts/fa2cmap.pl
 	cmap_stat="$scriptsDir"/HybridScaffold/scripts/calc_cmap_stats.pl
