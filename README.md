@@ -20,7 +20,7 @@ At present, runBNG offers 11 mainly used functions in BioNano analyses, which ar
 <pre>
 Description: This pipeline aims to complete key BioNano optical mapping analyses using command line.
 
-Version: 1.02
+Version: 1.03
 
 Usage: runBNG [fa2cmap] [cmapstats] [bnxmerge] [bnxstats] [bnxfilter] [MQR] [repeatCheck] [denovo] [compare] [hybrid] [SV]
         fa2cmap         convert a given fasta format file into a cmap file.
@@ -30,7 +30,7 @@ Usage: runBNG [fa2cmap] [cmapstats] [bnxmerge] [bnxstats] [bnxfilter] [MQR] [rep
         bnxfilter       filter unqualified molecule maps.
         MQR             get a molecule quality report for the BioNano data.
         repeatCheck     check repeats using BioNano raw data.
-        denovo          de novo assemble BioNano single molecule.
+        denovo          de novo assemble BioNano single molecule maps.
         compare         compare two different cmap files.
         hybrid          perform BioNano hybrid scaffolding.
         SV              structural variation detection.
