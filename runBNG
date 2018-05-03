@@ -285,8 +285,8 @@ hy_msg="$hy_msg	-s	full path to BioNano scripts folder.\n";
 hy_msg="$hy_msg	-t	full path to BioNano tools folder.\n";
 hy_msg="$hy_msg	-r	NGS sequence file.\n";
 hy_msg="$hy_msg	-b	the raw molecule map file (e.g. Molecules.bnx).\n";
-hy_msg="$hy_msg	-m	filter: min molecule length (Kb). Default is 20 (optional).\n"
-hy_msg="$hy_msg	-l	filter:	min number of selected enzyme in molecule. Default is 5 (optional).\n";
+hy_msg="$hy_msg	-m	filter: min molecule length (Kb). Default is 0 (optional).\n"
+hy_msg="$hy_msg	-l	filter:	min number of selected enzyme in molecule. Default is 0 (optional).\n";
 hy_msg="$hy_msg	-e	name of selected enzyme. Currently available enzymes are: BspQI, BbvCI, BsmI, BsrDI and BseCI. Default is BspQI (optional).\n"
 hy_msg="$hy_msg	-B	BioNano conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig.\n"
 hy_msg="$hy_msg	-N	NGS conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig.\n"
@@ -1729,10 +1729,10 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
 		echo -e "$hy_msg" 1>&2;exit 1;
 	fi
 	if [[ -z "$minLen" ]];then
-		minLen=20
+		minLen=0
 	fi
 	if [[ -z "$minEnzy" ]]; then
-		minEnzy=5
+		minEnzy=0
 	fi
 	if [[ -z "$enzyme" ]]; then
 		enzyme=BspQI
