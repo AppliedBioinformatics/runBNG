@@ -885,7 +885,7 @@ if [[ $1 == "bnxfilter" ]] && [[ $# -gt 1 ]]; then
 		pix=0.001
 	fi
 
-	check_integer $threads; check_integer $mem; check_integer $minLen; check_integer $minsite;
+	check_integer $threads; check_integer $mem; check_integer $minlen; check_integer $minsite;
 
 	echo "====================================== bnxfilter starts ======================================="
 	echo "## Start date: `date`"
