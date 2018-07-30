@@ -768,8 +768,8 @@ if [[ $1 == "bnxstats" ]] && [[ $# -gt 1 ]]; then
 	maxSNR=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $5}' | sort -rn | head -n 1`
 	avgSNR=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $5}' | awk '{sum+=$1; n++} END {print sum/n}'`
 
-	maxten=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $4}' | sort -n | head -n 1`
-	minten=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $4}' | sort -rn | head -n 1`
+	minten=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $4}' | sort -n | head -n 1`
+	maxten=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $4}' | sort -rn | head -n 1`
 	avgten=`grep -v "^#" "$bnx" | awk '{if (NR%4==1) print $4}' | awk '{sum+=$1; n++} END {print sum/n}'`
 
 	echo "========================================== bnxstats starts ============================================="
