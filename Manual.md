@@ -22,7 +22,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
    Open the 'Terminal' and type, for example 'lsb_release -a' to check. If users use Ubuntu, please use LTS version. If users use 
    CentOS, please use version 6.4 or greater. Other Linux system, such as Redhat, Fedora, SUSE, Arch Linux and Debian, they may use equivalent version or above.
 
-   a) If the system is satisfied, users may 'cd' to 'runBNG directory' and type 'chmod +x runBNG'
+   a) If the system is satisfied, users may 'cd' to 'runBNG directory' and type ``chmod +x runBNG``
     in the 'Terminal'. Once the executable permission is given to 'runBNG', users may type './runBNG', and then
     'runBNG' will check the system and tell which dependency needs to be set or installed. 
     If there is no error raise, it means all dependencies are installed and set properly to 
@@ -48,9 +48,10 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
       
     Each provided website has a detailded instruction showing how to install corresponding software. 
     Users may follow those instructions and install needed dependencies.
+    
+    Bionano Solve can be downloaded at:
+    http://www.bnxinstall.com/solve/BionanoSolveInstall.html
 
-    BioNano scripts can be downloaded at: http://www.bnxinstall.com/Scripts
-    Linux version BioNano tools can be downloaded at: http://www.bnxinstall.com/RefAlignerAssembler
     To determine which accelerator type should be used, please use the command "grep avx /proc/cpuinfo" 
     or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX 
     as it is faster than SSE2.</pre>
@@ -87,24 +88,32 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
 2) Detailed usages:
     
     $runBNG -h
-    <pre>
-    Description: This pipeline aims to complete key BioNano optical mapping analyses using command line.
+    ```
+    ------------------------------------------------------------------------------------------------------
+    Program:  runBNG
+    Version:  2.0
+    Author:   Yuxuan Yuan (yuxuan.yuan@outlook.com) 
+    ------------------------------------------------------------------------------------------------------
+    Synopsis: This pipeline aims to help complete key Bionano optical mapping analyses using command line
 
-    Version: 1.02
+    Usage:    runBNG <command> [options]
 
-    Usage: runBNG [fa2cmap] [cmapstats] [bnxmerge] [bnxstats] [bnxfilter] [MQR] [repeatCheck] [denovo] [compare] [hybrid] [SV]
-            fa2cmap         convert a given fasta format file into a cmap file.
-            cmapstats       check stats of a cmap file.
-            bnxmerge        merge different bnx files into one.
-            bnxstats        check stats of a bnx file.
-            bnxfilter       filter unqualified molecule maps.
-            MQR             get a molecule quality report for the BioNano data.
-            repeatCheck     check repeats using BioNano raw data.
-            denovo          de novo assemble BioNano single molecule.
-            compare         compare two different cmap files.
-            hybrid          perform BioNano hybrid scaffolding.
-            SV              structural variation detection.
-    Please select one of the given options and continue</pre>
+    Command:  fa2cmap       convert a given fasta format file into a cmap file
+              cmapstats     check stats of a cmap file
+              bnxmerge      merge different bnx files into one
+              bnxstats      check stats of a bnx file
+              bnxfilter     filter a bnx file 
+              MQR           get a molecule quality report for the BioNano data
+              repeatCheck   check repeats using Bionano raw data
+              denovo        de novo assemble Bionano single molecule maps
+              compare       compare two different cmap files
+              hybrid        perform Bionano hybrid scaffolding using one enzyme 
+              dual          perform Bionano hybrid scaffolding using two enzymes 
+              SV            structural variation detection
+
+    options:  -h/-help   show this message and exit
+    -----------------------------------------------------------------------------------------------------
+    ```
 
     $runBNG fa2cmap -h
     ```
@@ -288,7 +297,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
 Note:
     <pre>
     a) Users can select any of the given options to start their analyses. 
-    b) Flags without 'optional' indicated are all mandatory. Errors will be raised when they are not specified.
+    b) Flags without 'optional' or 'deafult' indicated are all mandatory. Errors will be raised when they are not specified.
     c) It is suggested to run 'MQR' first before running 'denovo', because the result from 'MQR' can be used to adjust the parameter settings in 'denovo', such as 'flase positive density', 'false negative rate' and 'siteSD'.
     d) Users may use 'bnxstats' and 'bnxfilter' together to perform quality control of their single molecule maps.
     e) 'SV' and 'hybrid' requires the result from denovo assembly. It is recommended to run 'denovo' first before running 'SV' and 'hybrid'.</pre>
