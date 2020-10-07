@@ -473,7 +473,7 @@ Usage:    `basename $0` dual [options]
 -2 <str>  full path to the denovo assembled cmap file by the second enzyme
 -e <str>  name of first enzyme <BspQI|BbvCI|BsmI|BsrDI|BssSI|DLE1>
 -E <str>  name of second enzyme <BspQI|BbvCI|BsmI|BsrDI|BssSI|DLE1>
--r <str>  full path to the NGS assembly 
+-n <str>  full path to the NGS assembly 
 -o <str>  output directory
 
 -h/--help show this message and exit
@@ -2261,8 +2261,8 @@ if [[ $1 == "dual" ]] && [[ $# -gt 1 ]]; then
     fi	
 
 	refA=`readlink -f $refA`; check_file "$refA"
-	cmap1=`readlink -f $camp1`; check_file "$cmap1"
-	cmap2=`readlink -f $camp2`; check_file "$cmap2"
+	cmap1=`readlink -f $cmap1`; check_file "$cmap1"
+	cmap2=`readlink -f $cmap2`; check_file "$cmap2"
 	ngs=`readlink -f $ngs`; check_file "$ngs"
 
 	enz1=`check_enz $enz1`; 
@@ -2281,7 +2281,7 @@ if [[ $1 == "dual" ]] && [[ $# -gt 1 ]]; then
 
 	check_path "$outDir"
 
-	if [[ $enz1 == $enz1 ]]; then 
+	if [[ $enz1 == $enz2 ]]; then 
 	    echo -e "\nOops! The enzyme names input are the same. Please check!\n"
 		exit 1;
 	fi
@@ -2304,7 +2304,7 @@ if [[ $1 == "dual" ]] && [[ $# -gt 1 ]]; then
     echo "## The output directory is: ${outDir}"
 	echo
 
-	check_tool Rscipt;
+	check_tool Rscript;
 	Rscript "$scriptsDir"/HybridScaffold/1.0/runTGH.R --BNGPath1 "$cmap1" --BNGPath2 "$cmap2" --NGSPath "$ngs" --OutputDir "$outDir" --Enzyme1 $enz1 --Enzyme2 "$enz2" --RefAlignerPath "$refA" "$xml"
 
     echo "## End date: `date`"

@@ -50,6 +50,7 @@ options:  -h/-help   show this message and exit
 <pre>
   •Ubuntu LTS or CentOS 6.4 or above or other equivalent Linux system
   •python v2.7.5 or greater 
+  •R v3.x
   •perl v5.10.x, v5.14.x or v5.16.x
   •gcc 4.4.7 or greater 
   •glibc 2.15 or greater </pre>
@@ -58,7 +59,10 @@ options:  -h/-help   show this message and exit
    BioNano sovle can be downloaded at:
    
    http://www.bnxinstall.com/solve/BionanoSolveInstall.html</pre>
-* Please ensure BioNano RefAligner and BioNano Assembler are executable. Please ensure BioNano scripts are readable.
+* Please ensure BioNano RefAligner and BioNano Assembler are executable. Please ensure BioNano Solve are readable.
+* The required python package is `dateutil`
+* The required R packages are: `data.table`, `igraph`, `intervals` and `argparser`
+
 
 After all required dependencies are set, you can use 'runBNG' to start your analyses.  
 
