@@ -1,5 +1,5 @@
 # runBNG
-* A bash wrapper to run BioNano tasks on Linux clusters. 
+* A bash wrapper to run Bionano tasks on Linux clusters. 
 * Users of BioNano systems do not have to rely on Windows anymore
 
 ## Functions 
@@ -21,7 +21,7 @@ At present, runBNG offers 12 mainly used functions in Bionano analyses, which ar
 ```
 ------------------------------------------------------------------------------------------------------
 Program:  runBNG
-Version:  2.0
+Version:  2.0.1
 Author:   Yuxuan Yuan (yuxuan.yuan@outlook.com) 
 ------------------------------------------------------------------------------------------------------
 Synopsis: This pipeline aims to help complete key Bionano optical mapping analyses using command line
@@ -33,7 +33,7 @@ Command:  fa2cmap       convert a given fasta format file into a cmap file
           bnxmerge      merge different bnx files into one
           bnxstats      check stats of a bnx file
           bnxfilter     filter a bnx file 
-          MQR           get a molecule quality report for the BioNano data
+          MQR           get a molecule quality report for the Bionano data
           repeatCheck   check repeats using Bionano raw data
           denovo        de novo assemble Bionano single molecule maps
           compare       compare two different cmap files
@@ -56,11 +56,11 @@ options:  -h/-help   show this message and exit
   •glibc 2.15 or greater </pre>
 * Please download the latest Bionano Solve (Linux version). To determine which accelerator type should be used when selecting BioNano tools, please use the command "grep avx /proc/cpuinfo" or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX as it is faster than SSE2.
  <pre>
-   BioNano sovle can be downloaded at:
+   BioNano Sovle (containing Bionano Pipeline and RefAligner/Assembler) can be downloaded at:
    
-   http://www.bnxinstall.com/solve/BionanoSolveInstall.html</pre>
+   https://bionanogenomics.com/support/software-downloads</pre>
 * Please ensure BioNano RefAligner and BioNano Assembler are executable. Please ensure BioNano Solve are readable.
-* The required python package is `dateutil`
+* The required python package is `dateutil`, `lxml`
 * The required R packages are: `data.table`, `igraph`, `intervals` and `argparser`
 
 
