@@ -2,7 +2,7 @@
 
 # This script aims to help complete key Bionano OM analyses using command line
 # ScriptName: runBNG 
-# Last modified: 20/10/2020
+# Last modified: 05/04/2021
 # Copyright: Copyright (c) 2017 Applided Bioinformatics Group @UWA, Perth, Australia
 #
 
@@ -149,7 +149,7 @@ check_tool(){
     fi
 }
 
-VERSION=2.0
+VERSION=2.0.1
 ###========================================== messages ===============================================
 ##Start message
 usage_global(){
@@ -168,7 +168,7 @@ Command:  fa2cmap       convert a given fasta format file into a cmap file
           bnxmerge      merge different bnx files into one
           bnxstats      check stats of a bnx file
           bnxfilter     filter a bnx file 
-          MQR           get a molecule quality report for the BioNano data
+          MQR           get a molecule quality report for the Bionano data
           repeatCheck   check repeats using Bionano raw data
           denovo        de novo assemble Bionano single molecule maps
           compare       compare two different cmap files
@@ -217,7 +217,7 @@ Usage:    `basename $0` bnxmerge [options]
 -t <int>  number of threads or CPUs
 -m <int>  memory used (Gb)
 -p <str>  prefix for the merged file
--r <str>  full path to BioNano RefAligner
+-r <str>  full path to Bionano RefAligner
 -o <str>  full path to the output directory
 
 -h/--help show this message and exit
@@ -237,7 +237,7 @@ Usage:    `basename $0` bnxfilter [options]
 -t <int>  number of threads or CPUs
 -m <int>  memory used (Gb)
 -p <str>  prefix for the output files
--r <str>  full path to BioNano RefAligner
+-r <str>  full path to Bionano RefAligner
 -l <int>  min molecule length to be filtered (Kb). Default: 150 
 -s <int>  min number of selected enzymes in the molecule. Default: 8 
 -M <int>  max number of selected enzymes in the molecule. Default: 200 
@@ -271,14 +271,14 @@ Usage:    `basename $0` bnxstats [options]
 usage_mqr(){
 echo "
 ------------------------------------------------------------------------------------------------
-Synopsis: Report the quality of given BioNano single molecules
+Synopsis: Report the quality of given Bionano single molecules
 
 Usage:    `basename $0` MQR [options]
 ------------------------------------------------------------------------------------------------
 -b <str>  the raw molecule map file (e.g. Molecules.bnx)
 -r <str>  reference maps (.cmap). May use '`basename $0 fa2cmap`' to generate one if only have a fasta format reference
 -z <int>  genome size of input species (Mb). Using this option can help to estimate a suitable pvalue (optional)
--R <str>  full path to BioNano RefAligner
+-R <str>  full path to Bionano RefAligner
 -t <int>  maximum threads or CPUs
 -m <int>  maximum memory used (Gb)
 -s <int>  minimum length of single molecules to be filtered. Default: 150 (Kb) 
@@ -304,7 +304,7 @@ Synopsis: Get stats of a cmap file
 Usage:    `basename $0` cmapstats [options]
 ----------------------------------------------------------
 -c <str>  full path to the cmap file
--s <str>  full path to the BioNano Solve folder
+-s <str>  full path to the Bionano Solve folder
 
 -h/--help show this message and exit
 ----------------------------------------------------------
@@ -321,7 +321,7 @@ Usage:    `basename $0` repeatCheck [options]
 ----------------------------------------------------------
 -b <str>  the raw molecule map file (e.g. Molecules.bnx)
 -p <str>  prefix for the output files.
--R <str>  full path to BioNano RefAligner
+-R <str>  full path to Bionano RefAligner
 -o <str>  full path to the output directory
 
 -h/--help show this message and exit
@@ -346,7 +346,7 @@ Usage:    `basename $0` denovo [options]
           For human genome, it's recommended. For other species try both.
 -E <str>  extend and split for maps <yes|no>. Default: yes
 -t <str>  full path to RefAligner folder
--s <str>  full path to BioNano Solve folder
+-s <str>  full path to Bionano Solve folder
 -b <str>  the raw molecule map file (e.g. Molecules.bnx)
 -r <str>  the digested reference (.cmap). Default: NULL
 -a <flt>  label density (*/100kb). Default: NULL
@@ -356,11 +356,14 @@ Usage:    `basename $0` denovo [options]
 -B <flt>  maximum backbone intensity. Default: 0.6 
 -j <int>  number of threads for each subjob
 -i <int>  times of iteration. Default: 5
+-k <int>  skip steps, using previous result. 0:None, 1:ImgDetect, 2:NoiseChar/Subsample, 
+          3:Pairwise, 4:Assembly, 5:RefineA, 6:RefineB, 7:merge0, 8+(i-1)*2:Ext(i), 
+          9+(i-1)*2:Mrg(i), N+1:alignmol. Default: 0
 -z <int>  the genome size of input species (Mb)
 -p <flt>  flase positive density (/100Kb). Default: 2.0
 -n <flt>  false negative rate (%/100). Default: 0.10 
 -d <flt>  scalingSD (Kb^1/2). Default: 0.0 
--f <flt>  siteSD (Kb). Default： irys [0.15]; saphyr [0.12]
+-f <flt>  siteSD (Kb). Default: irys [0.15]; saphyr [0.12]
 -R <flt>  relativeSD. Default: 0.03
 -L <int>  large jobs maximum memory (GB). Default: 128
 -S <int>  small jobs maximum memory (GB). Default: 8 
@@ -371,7 +374,7 @@ Usage:    `basename $0` denovo [options]
 "
 }
 
-##Compare assembled BioNano data to a ref cmap file
+##Compare assembled Bionano data to a ref cmap file
 usage_compare(){
 echo "
 ------------------------------------------------------------------------
@@ -379,7 +382,7 @@ Synopsis: Compare a query cmap file to a ref cmap file
 
 Usage:    `basename $0` compare [options]
 ------------------------------------------------------------------------
--R <str>  path to BioNano RefAligner
+-R <str>  path to Bionano RefAligner
 -r <str>  full path to the reference cmap file
 -q <str>  full path to the query cmap file
 -z <int>  the genome size of input species (Mb)
@@ -438,7 +441,7 @@ Usage:    `basename $0` hybrid [options]
 -m <int>  filter: min molecule length (Kb). Default: 0 
 -l <int>  filter: min number of selected enzyme in molecule. Default: 0
 -e <str>  name of selected enzyme <BspQI|BbvCI|BsmI|BsrDI|BssSI|DLE1>. Default: DLE1 
--B <int>  BioNano conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig
+-B <int>  Bionano conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig
 -N <int>  NGS conflict filter level: 1 no filter, 2 cut contig at conflict, 3 exclude conflicting contig
 -f <str>  final assembled cmap file (e.g. EXP_REFINEFINAL1.cmap)
 -x <int>  the xml file used to produce the final assembled cmap file
@@ -449,7 +452,7 @@ Usage:    `basename $0` hybrid [options]
           Default: irys [1e-13]; saphry [1e-11] 
 -d <int>  The distance (kb) from a conflicting site within which the chimeric quality score of Bionano genome map labels will be examined.
           Default: 10 
--p <int>  The minimal percentage (%) of molecules spanning to the left and right of a label of interest, thus supporting the BioNano assembly
+-p <int>  The minimal percentage (%) of molecules spanning to the left and right of a label of interest, thus supporting the Bionano assembly
           at that region. Default: 35
 -t <int>  maximum threads or CPUs
 -M <int>  maximum RAM used (Gb)
@@ -598,8 +601,8 @@ if [[ $1 == "fa2cmap" ]] && [[ $# -gt 1 ]]; then
     digestScript="$scriptsDir"/HybridScaffold/1.0/scripts/fa2cmap_multi_color.pl
     cmap_stat="$scriptsDir"/HybridScaffold/1.0/scripts/calc_cmap_stats.pl
     if [[ ! -s "$digestScript" ]] || [[ ! -s "$cmap_stat" ]]; then
-        echo "Please use the original Bionano Solve from BioNano Genomics"
-        echo -e "You may download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html\n"
+        echo "Please use the original Bionano Solve from Bionano Genomics"
+        echo -e "You may download it from https://bionanogenomics.com/support/software-downloads \n"
         echo "## End date: `date`"
         echo "======================================================================================================="
         exit 1;
@@ -703,8 +706,8 @@ if [[ $1 == "cmapstats" ]] && [[ $# -gt 1 ]]; then
     fi
 
     if [[ ! -d "$scriptsDir" ]] || [[ ! -r "$scriptsDir" ]]; then
-        echo -e "\nOops! It seems that the BioNano Solve folder is not existent or readable. Please check!"
-        echo -e "You may also download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html, and give a read permission.\n"
+        echo -e "\nOops! It seems that the Bionano Solve folder is not existent or readable. Please check!"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads, and give a read permission.\n"
         exit 1
     fi
 
@@ -715,8 +718,8 @@ if [[ $1 == "cmapstats" ]] && [[ $# -gt 1 ]]; then
     echo
     cmap_stat="$scriptsDir"/HybridScaffold/1.0/scripts/calc_cmap_stats.pl
     if [[ ! -s "$cmap_stat" ]];then
-        echo "Please use the original Bionano Solve folder from BioNano Genomics"
-        echo "You may download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html"
+        echo "Please use the original Bionano Solve folder from Bionano Genomics"
+        echo "You may download it from https://bionanogenomics.com/support/software-downloads"
         echo
         echo "## End date: `date`"
         echo "======================================================================================================="
@@ -795,7 +798,7 @@ if [[ $1 == "bnxmerge" ]] && [[ $# -gt 1 ]]; then
         "$refA" -f -if "$list" -merge -sort-idinc -bnx -maxthreads "$threads" -maxmem "$mem" -o "${outDir}/${name}" -XmapStatWrite "${outDir}"/merged_stats.txt -stdout -stderr
     else
         echo "Please check the availability or executability of your RefAligner!"
-        echo "You may download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html, and give an executable permission."
+        echo "You may download it from https://bionanogenomics.com/support/software-downloads, and give an executable permission."
     fi	
     echo
     echo "## End date: `date`"
@@ -957,7 +960,7 @@ if [[ $1 == "bnxfilter" ]] && [[ $# -gt 1 ]]; then
     refA=`readlink -f "$refA"`
     if [[ ! -s "refA" ]] && [[ ! -x "$refA" ]]; then
         echo -e "\nPlease check your RefAligner whether it is existent or executable"
-        echo -e "You may download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html, and give an executable permission.\n"
+        echo -e "You may download it from https://bionanogenomics.com/support/software-downloads, and give an executable permission.\n"
         exit 1
     fi
 
@@ -1097,7 +1100,7 @@ if [[ $1 == "MQR" ]] && [[ $# -gt 1 ]];then
         RefA=`readlink -f "$RefA"`
     else
         echo -e "\nIt seems the RefAligner is not existent or executable. Please check!"
-        echo -e "You may also download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html, and give an executable permission.\n"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads, and give an executable permission.\n"
         exit 1;
     fi
 
@@ -1213,7 +1216,7 @@ if [[ $1 == "repeatCheck" ]] && [[ $# -gt 1 ]];then
     RefA=`readlink -f "$RefA"`
     if [[ ! -s "$RefA" ]] || [[ ! -x "$RefA" ]]; then
         echo -e "\nIt seems the RefAligner is not existent or executable. Please check!"
-        echo -e "You may also download it from http://www.bnxinstall.com/solve/BionanoSolveInstall.html, and give an executable permission.\n"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads, and give an executable permission.\n"
         exit 1
     fi
 
@@ -1253,7 +1256,7 @@ fi
 ##Select "denovo" flag
 if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
     shift
-    deno_options=':ht:P:H:M:e:E:c:s:b:a:T:j:i:B:z:r:p:n:d:f:R:L:S:o:l:m:';
+    deno_options=':ht:P:H:M:e:E:c:s:b:a:T:j:i:k:B:z:r:p:n:d:f:R:L:S:o:l:m:';
     while getopts "$deno_options" opt; do
         case "$opt" in
             h) usage_denovo; exit 0;;
@@ -1272,6 +1275,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
             T) nthreads=${OPTARG};;
             j) njobs=${OPTARG};;
             i) iter=${OPTARG};;
+            k) skip=${OPTARG};;
             z) gs=${OPTARG};;
             r) ref=${OPTARG};;
             a) labD=${OPTARG};;
@@ -1329,6 +1333,10 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
         iter=5
     fi
 
+    if [[ -z "$skip" ]]; then
+        skip=0
+    fi
+
     if [[ -z "$fp" ]]; then
         fp=2.0
     fi
@@ -1377,7 +1385,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
         maxIntensity=0.6
     fi
 
-    check_integer $nthreads; check_integer $njobs; check_integer $iter; check_integer $gs
+    check_integer $nthreads; check_integer $njobs; check_integer $iter; check_integer $gs; check_integer $skip
 
     last_chr_t="${toolsDir: -1}"
     if [[ "$last_chr_t" == "/" ]]; then
@@ -1401,19 +1409,19 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
 
     if [[ ! -d "$toolsDir" ]] && [[ ! -x "$toolsDir"/RefAligner ]] && [[ ! -x "$toolsDir"/Assembler ]]; then
         echo -e "\nPlease check the RefAligner folder and the executability of all inside!"
-        echo -e "You may download it from http://bnxinstall.com/solve/BionanoSolveInstall.html, and give an executable permission\n"
+        echo -e "You may download it from https://bionanogenomics.com/support/software-downloads, and give an executable permission\n"
         exit 1
     fi
 
     if [[ ! -d "$scriptsDir" ]] || [[ ! -r "$scriptsDir" ]]; then
-        echo -e "\nOops! It seems the BioNano Solve folder is not existent or readable. Please check!"
-        echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html, and give a read permission\n"
+        echo -e "\nOops! It seems the Bionano Solve folder is not existent or readable. Please check!"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads, and give a read permission\n"
 	    exit 1
     fi
 
     if [[ ! -s "$scriptsDir/Pipeline/1.0/pipelineCL.py" ]]; then
-        echo -e "\nPlease use the original BioNano Solve folder."
-        echo -e "You may download it from http://bnxinstall.com/solve/BionanoSolveInstall.html, and give a read permission\n"
+        echo -e "\nPlease use the original Bionano Solve folder."
+        echo -e "You may download it from https://bionanogenomics.com/support/software-downloads, and give a read permission\n"
         exit 1
     fi
 
@@ -1444,7 +1452,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
             refADir="$refADir/.."
         else
             echo -e "\nOops! It seems that the input Bionano Solve folder is not the original folder or not readable. Please check!"
-            echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"; exit 1;
+            echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"; exit 1;
 		fi
 	fi
 
@@ -1645,7 +1653,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
 		if [[ "$enzy" == 'yes' ]]; then
 			if [[ -s "$ref" ]]; then 
 				if [[ -z "$labD" ]]; then 
-					echo -e "\nOops! Please specify the label density (-B) for your reference!\n"; exit 1;
+					echo -e "\nOops! Please specify the label density (-a) for your reference!\n"; exit 1;
 				else
 					pv=`awk "BEGIN {print 3e-5/$gs/1000/$labD}"`
 					pvs=`awk "BEGIN {print $pv/10}"`
@@ -1658,10 +1666,10 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
     fi
 
     if [[ -z "$ref" ]];then
-        python "$scriptsDir/Pipeline/1.0/pipelineCL.py" -R -w -d -U -T "$nthreads" -j "$njobs" -je "$njobs" -jp "$nthreads" -J "$njobs" -TJ "$nthreads" -Te "$nthreads" -Tp "$nthreads" -i "$iter" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" >&1
+        python "$scriptsDir/Pipeline/1.0/pipelineCL.py" -R -w -d -U -T "$nthreads" -j "$njobs" -je "$njobs" -jp "$nthreads" -J "$njobs" -TJ "$nthreads" -Te "$nthreads" -Tp "$nthreads" -i "$iter" -B "$skip" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" >&1
     else
         if [[ -s "$ref" ]] && [[ -r "$ref" ]];then
-            python "$scriptsDir/Pipeline/1.0/pipelineCL.py" -R -w -d -U -T "$nthreads" -j "$njobs" -je "$njobs" -jp "$nthreads" -J "$njobs" -TJ "$nthreads" -Te "$nthreads" -Tp "$nthreads" -i "$iter" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" -r "$ref" >&1
+            python "$scriptsDir/Pipeline/1.0/pipelineCL.py" -R -w -d -U -T "$nthreads" -j "$njobs" -je "$njobs" -jp "$nthreads" -J "$njobs" -TJ "$nthreads" -Te "$nthreads" -Tp "$nthreads" -i "$iter" -B "$skip" -t "$toolsDir" -a "$outDir/optArguments_new.xml" -l "$outDir" -b "$bnx" -r "$ref" >&1
         else
             echo "Oops! It seems the reference: '${ref}' is not existent or readable. Please check!"
         fi
@@ -1836,7 +1844,7 @@ if [[ $1 == "SV" ]] && [[ $# -gt 1 ]];then
     fi
     if [[ ! -d "$scriptsDir" ]] || [[ ! -s "$scriptsDir"/Pipeline/1.0/runSV.py ]] || [[ ! -r "$scriptsDir" ]]; then
         echo -e "\nOops! It seems that the input Bionano Solve folder is not the original folder or not readable. Please check!"
-        echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"
         exit 1
     fi
 
@@ -1866,7 +1874,7 @@ if [[ $1 == "SV" ]] && [[ $# -gt 1 ]];then
             refADir="$refADir/.."
         else
             echo -e "\nOops! It seems that the input Bionano Solve folder is not the original folder or not readable. Please check!"
-            echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"; exit 1;
+            echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"; exit 1;
 		fi
 	fi
 
@@ -2094,7 +2102,7 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
         minEnzy=0
     fi
     if [[ -z "$enzyme" ]]; then
-        enzyme=DEL1
+        enzyme=DLE1
     fi
     if [[ -z "$intial" ]]; then
         intial=1e-10
@@ -2132,8 +2140,8 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
     RefA="$toolsDir"/RefAligner
 
     if [[ ! -d "$toolsDir" ]] || [[ ! -x "$toolsDir"/RefAligner ]] || [[ ! -x "$toolsDir"/Assembler ]]; then
-        echo -e "\nOops! It seems the RefAligner folder is not the original folder from BioNano Genomics or it is not executable. Please check!"
-        echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"
+        echo -e "\nOops! It seems the RefAligner folder is not the original folder from Bionano Genomics or it is not executable. Please check!"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"
         exit 1
     fi
 
@@ -2148,8 +2156,8 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
     fi
 
     if [[ ! -d "$scriptsDir" ]] || [[ ! -s "$scriptsDir"/HybridScaffold/1.0/hybridScaffold_config.xml ]] || [[ ! -r "$scriptsDir"/HybridScaffold/1.0/hybridScaffold.pl ]]; then
-        echo -e "\nOops! It seems that the Bionano Solve folder is not the original scripts folder from BioNano Genomics or all inside in not readable. Please check!"
-        echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"
+        echo -e "\nOops! It seems that the Bionano Solve folder is not the original scripts folder from Bionano Genomics or all inside in not readable. Please check!"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"
         exit 1
     fi
 
@@ -2177,14 +2185,14 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
     echo "## The minimum molecule length (Kb) is: ${minLen}"
     echo "## The minimum number of selected enzyme in molecule is: ${minEnzy}"
     echo "## The enzyme is: ${enzyme}"
-    echo "## BioNano conflict filter level is: ${BNGf}"
+    echo "## Bionano conflict filter level is: ${BNGf}"
     echo "## NGS conflict filter level is: ${NGSf}"
     echo "## The estimated genome size (Mb) is: ${gs}"
     echo "## The final assembled cmap file is: ${final}"
     echo "## Minimum confidence value to output intial alignments: ${intial}"
     echo "## Minimum confidence value used to flag chimeric/conflicting alignments: ${chimeric}"
     echo "## Minimum confidence value used to merge alignments: ${merge}"
-    echo "## The distance (bp) from a conflicting site within which the chimeric quality score of BioNano genome map labels will be examined: ${dis}"
+    echo "## The distance (bp) from a conflicting site within which the chimeric quality score of Bionano genome map labels will be examined: ${dis}"
     echo "## The minimal percentage (%) of molecules spanning to the left and right of a label of interest: ${ptg}"
     echo "## The maximum number of threads or CPUs is: ${maxthreads}"
     echo "## The maximum number of RAM (Gb) is: ${maxmem}"
@@ -2205,7 +2213,9 @@ if [[ $1 == "hybrid" ]] && [[ $# -gt 1 ]];then
     sed -i -e "s/\"refaligner\"\ val0=\"\~\/tools\/RefAligner\"/\"refaligner\"\ val0=\"$RefAA\"/" -e "s/val0=\"CTTAAG\"/val0=\"${enzyme}\"/" -e "s/\"minLength\"\ val0=\"0\"/\"minLength\"\ val0=\"${minLen}\"/" -e "s/\"minLabels\"\ val0=\"0\"/\"minLabels\"\ val0=\"${minEnzy}\"/" -e "s/\"maxmem\"\ val0=\"128\"/\"maxmem\"\ val0=\"${maxmem}\"/" -e "s/\"maxthreads\"\ val0=\"64\"/\"maxthreads\"\ val0=\"${maxthreads}\"/" "$outDir"/../hybridScaffold_config_new.xml
     sed -i -e "s/::::/\//g" "$outDir"/../hybridScaffold_config_new.xml
     Lintial=`grep -n "Initial alignment" "$outDir"/../hybridScaffold_config_new.xml | cut -d":" -f1`
-    sed -i "${Lintial}s/1e-10/$intial/" "$outDir"/../hybridScaffold_config_new.xml
+    for line in $Lintial; do 
+        sed -i "${line}s/1e-10/$intial/" "$outDir"/../hybridScaffold_config_new.xml
+    done
     sed -i -e "s/\"T_cutoff\"\ val0=\"1e-11\"/\"T_cutoff\"\ val0=\"$chimeric\"/" -e "s/\"window_size\"\ val0=\"10000\"/\"window_size\"\ val0=\"$dis\"/" -e "s/\"merge_Tvalue\"\ val0=\"1e-11\"/\"merge_Tvalue\"\ val0=\"$merge\"/" -e "s/val0=\"35\"\ display=\"Percent/val0=\"$ptg\"\ display=\"Percent/" "$outDir"/../hybridScaffold_config_new.xml
     perl "$scriptsDir"/HybridScaffold/1.0/hybridScaffold.pl -f -B "$BNGf" -N "$NGSf" -r "$RefA" -n "$NGS" -b "$final" -c "$outDir"/../hybridScaffold_config_new.xml -o "$outDir" -x -m "$bnx" -p "$scriptsDir/Pipeline/1.0" -q "$xml"
     rm -f "$outDir"/../hybridScaffold_config_new.xml
@@ -2255,8 +2265,8 @@ if [[ $1 == "dual" ]] && [[ $# -gt 1 ]]; then
     fi
 
     if [[ ! -d "$scriptsDir" ]] || [[ ! -s "$scriptsDir"/HybridScaffold/1.0/runTGH.R ]] || [[ ! -r "$scriptsDir"/HybridScaffold/1.0/runTGH.R ]]; then
-        echo -e "\nOops! It seems that the Bionano Solve folder is not the original scripts folder from BioNano Genomics or all inside in not readable. Please check!"
-        echo -e "You may also download it from http://bnxinstall.com/solve/BionanoSolveInstall.html\n"
+        echo -e "\nOops! It seems that the Bionano Solve folder is not the original scripts folder from Bionano Genomics or all inside in not readable. Please check!"
+        echo -e "You may also download it from https://bionanogenomics.com/support/software-downloads\n"
         exit 1
     fi	
 
