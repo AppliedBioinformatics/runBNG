@@ -50,7 +50,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
     Users may follow those instructions and install needed dependencies.
     
     Bionano Solve can be downloaded at:
-    http://www.bnxinstall.com/solve/BionanoSolveInstall.html
+    https://bionanogenomics.com/support/software-downloads
 
     To determine which accelerator type should be used, please use the command "grep avx /proc/cpuinfo" 
     or "grep sse2 /proc/cpuinfo" and search for the word ‘avx’ or ‘sse2’. If both types exist, use AVX 
@@ -68,6 +68,8 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
       export PATH=$HOME/.linuxbrew/Cellar/python/2.7.11/bin:$PATH </pre>
 
 4) After all settings being done, 'runBNG' should work in the satisfied linux system.
+
+Sometimes, it is difficult to install ``perl`` as requested by ``Bionano Solve``, you may follow the introduction [here](https://github.com/AppliedBioinformatics/runBNG/wiki/How-to-install-perl-for-Bionano-Solve) to install one.
 
 ## Run 'runBNG'
 
@@ -91,7 +93,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
     ```
     ------------------------------------------------------------------------------------------------------
     Program:  runBNG
-    Version:  2.0
+    Version:  2.0.1
     Author:   Yuxuan Yuan (yuxuan.yuan@outlook.com) 
     ------------------------------------------------------------------------------------------------------
     Synopsis: This pipeline aims to help complete key Bionano optical mapping analyses using command line
@@ -103,7 +105,7 @@ Users may use 'git clone https://github.com/AppliedBioinformatics/runBNG.git' in
               bnxmerge      merge different bnx files into one
               bnxstats      check stats of a bnx file
               bnxfilter     filter a bnx file 
-              MQR           get a molecule quality report for the BioNano data
+              MQR           get a molecule quality report for the Bionano data
               repeatCheck   check repeats using Bionano raw data
               denovo        de novo assemble Bionano single molecule maps
               compare       compare two different cmap files
