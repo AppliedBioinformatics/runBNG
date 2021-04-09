@@ -1353,7 +1353,7 @@ if [[ $1 == "denovo" ]] && [[ $# -gt 1 ]];then
         if [[ "$plt" == "irys" ]]; then
             sf=0.15
         else
-            len=0.12
+            sf=0.12
 		fi
     fi
 
